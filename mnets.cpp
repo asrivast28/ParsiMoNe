@@ -85,14 +85,12 @@ learnNetwork(
 )
 {
   auto algo = getAlgorithm<Var, UintSet<Var, Size>>(options.algoName(), comm, data);
-  if (options.learnNetwork() || !options.outputFile().empty()) {
-    comm.barrier();
-    TIMER_DECLARE(tNetwork);
-    auto g = algo->getNetwork((comm.size() > 1) || options.forceParallel(), options.algoConfigs());
-    comm.barrier();
-    if (comm.is_first()) {
-      TIMER_ELAPSED("Time taken in learning the network: ", tNetwork);
-    }
+  comm.barrier();
+  TIMER_DECLARE(tNetwork);
+  algo->learnNetwork((comm.size() > 1) || options.forceParallel(), options.algoConfigs(), options.outputDir());
+  comm.barrier();
+  if (comm.is_first()) {
+    TIMER_ELAPSED("Time taken in learning the network: ", tNetwork);
   }
 }
 
