@@ -30,6 +30,10 @@ armadilloLib = [
                 'armadillo',
                 ]
 
+trngLib = [
+           'trng4',
+           ]
+
 srcFiles = [
             'ProgramOptions.cpp',
             'mnets.cpp',
@@ -40,7 +44,7 @@ built = False
 buildEnv = env.Clone()
 # Check if all the library files can be located
 conf = Configure(buildEnv)
-for lib in boostLibs + armadilloLib:
+for lib in boostLibs + armadilloLib + trngLib:
   if lib in buildEnv.get('LIBS', []):
     continue
   if not conf.CheckLib(lib, language='C++'):

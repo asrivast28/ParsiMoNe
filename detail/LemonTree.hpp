@@ -30,7 +30,11 @@
 #include <boost/filesystem.hpp>
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
+#include <trng/mrg3s.hpp>
 
+
+// PRNG type to be used for generating random numbers
+using PRNG = trng::mrg3s;
 
 template <typename Data, typename Var, typename Set>
 LemonTree<Data, Var, Set>::LemonTree(
@@ -102,7 +106,7 @@ LemonTree<Data, Var, Set>::clusterVarsGanesh(
   const pt::ptree& ganeshConfigs
 ) const
 {
-  auto randomSeed = ganeshConfigs.get<uint32_t>("seed");
+  auto randomSeed = ganeshConfigs.get<uint64_t>("seed");
   auto numRuns = ganeshConfigs.get<uint32_t>("num_runs");
   Generator generator;
   std::list<std::list<Set>> sampledClusters;
@@ -694,7 +698,7 @@ LemonTree<Data, Var, Set>::learnModules(
   const bool isParallel
 ) const
 {
-  auto randomSeed = modulesConfigs.get<uint32_t>("seed");
+  auto randomSeed = modulesConfigs.get<uint64_t>("seed");
   Generator generator(randomSeed);
   TIMER_DECLARE(tConstruct);
   auto modules = this->constructModulesWithTrees(std::move(coClusters), generator, modulesConfigs);
@@ -791,8 +795,6 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
   const std::string& outputDir
 ) const
 {
-  using Generator = std::mt19937_64;
-
   /* GaneSH clustering */
   if (algoConfigs.count("ganesh") == 0) {
     std::cerr << "WARNING: Skipping ganesh and other downstream tasks" << std::endl;
@@ -800,7 +802,7 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
   }
   TIMER_START(m_tGanesh);
   const auto& ganeshConfigs = algoConfigs.get_child("ganesh");
-  auto varClusters = this->clusterVarsGanesh<Generator>(ganeshConfigs);
+  auto varClusters = this->clusterVarsGanesh<PRNG>(ganeshConfigs);
   TIMER_PAUSE(m_tGanesh);
   auto clusterFile = ganeshConfigs.get<std::string>("output_file");
   if (!clusterFile.empty()) {
@@ -834,7 +836,7 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
   }
   TIMER_START(m_tModules);
   const auto& modulesConfigs = algoConfigs.get_child("regulators");
-  auto modules = this->learnModules<Generator>(std::move(coClusters), modulesConfigs);
+  auto modules = this->learnModules<PRNG>(std::move(coClusters), modulesConfigs);
   TIMER_PAUSE(m_tModules);
   auto modulesFile = modulesConfigs.get<std::string>("output_file");
   if (!modulesFile.empty()) {
@@ -852,8 +854,6 @@ LemonTree<Data, Var, Set>::learnNetwork_parallel(
   const std::string& outputDir
 ) const
 {
-  using Generator = std::mt19937_64;
-
   /* GaneSH clustering */
   if (algoConfigs.count("ganesh") == 0) {
     if (this->m_comm.is_first()) {
@@ -863,7 +863,7 @@ LemonTree<Data, Var, Set>::learnNetwork_parallel(
   }
   TIMER_START(m_tGanesh);
   const auto& ganeshConfigs = algoConfigs.get_child("ganesh");
-  auto varClusters = this->clusterVarsGanesh<Generator>(ganeshConfigs);
+  auto varClusters = this->clusterVarsGanesh<PRNG>(ganeshConfigs);
   this->m_comm.barrier();
   TIMER_PAUSE(m_tGanesh);
   auto clusterFile = ganeshConfigs.get<std::string>("output_file");
@@ -904,7 +904,7 @@ LemonTree<Data, Var, Set>::learnNetwork_parallel(
   }
   TIMER_START(m_tModules);
   const auto& modulesConfigs = algoConfigs.get_child("regulators");
-  auto modules = this->learnModules<Generator>(std::move(coClusters), modulesConfigs, true);
+  auto modules = this->learnModules<PRNG>(std::move(coClusters), modulesConfigs, true);
   this->m_comm.barrier();
   TIMER_PAUSE(m_tModules);
   auto modulesFile = modulesConfigs.get<std::string>("output_file");
