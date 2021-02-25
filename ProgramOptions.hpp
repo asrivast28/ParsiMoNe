@@ -23,10 +23,8 @@
 #include <string>
 
 #include <boost/program_options.hpp>
-#include <boost/property_tree/ptree.hpp>
 
 namespace po = boost::program_options;
-namespace pt = boost::property_tree;
 
 /**
  * Utility class for parsing command line arguments.
@@ -72,7 +70,7 @@ public:
   outputDir() const;
 
   const std::string&
-  counterType() const;
+  configFile() const;
 
   bool
   forceParallel() const;
@@ -89,20 +87,15 @@ public:
   const std::string&
   logFile() const;
 
-  const pt::ptree&
-  algoConfigs() const;
-
   ~ProgramOptions();
 
 private:
   po::options_description m_desc;
-  pt::ptree m_algoConfigs;
   std::string m_logLevel;
   std::string m_logFile;
   std::string m_dataFile;
   std::string m_algoName;
   std::string m_outputDir;
-  std::string m_counterType;
   std::string m_configFile;
   uint32_t m_numVars;
   uint32_t m_numObs;

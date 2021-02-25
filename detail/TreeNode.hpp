@@ -142,6 +142,12 @@ public:
   const std::pair<std::shared_ptr<TreeNode<Data, Var, Set>>, std::shared_ptr<TreeNode<Data, Var, Set>>>&
   children() const;
 
+  void
+  makeLeaf();
+
+  uint32_t
+  nodeCount(const bool = false) const;
+
   std::list<TreeNode<Data, Var, Set>*>
   nodes(const bool = false);
 
@@ -161,13 +167,25 @@ public:
   prune(const double);
 
   template <typename Generator>
-  void
+  bool
   learnParentsSplits(Generator&, const Set&, const OptimalBeta&, const uint32_t);
 
-  const std::vector<std::tuple<Var, Var, double>>&
+  template <typename Generator, typename SplitIt>
+  bool
+  learnParentsSplits(Generator&, const Set&, const OptimalBeta&, const uint32_t, SplitIt, SplitIt) const;
+
+  template <typename SplitIt>
+  void
+  setWeightSplits(const SplitIt&, const SplitIt&);
+
+  template <typename SplitIt>
+  void
+  setRandomSplits(const SplitIt&, const SplitIt&);
+
+  const std::list<std::tuple<Var, Var, double>>&
   weightSplits() const;
 
-  const std::vector<std::tuple<Var, Var, double>>&
+  const std::list<std::tuple<Var, Var, double>>&
   randomSplits() const;
 
   template <typename Stream>
@@ -181,9 +199,13 @@ private:
   std::vector<std::tuple<Var, Var, double>>
   candidateParentsSplits(const Set&, const OptimalBeta&) const;
 
+  template <typename Generator, typename SplitIt>
+  bool
+  chooseSplits(Generator&, const std::vector<std::tuple<Var, Var, double>>&&, const uint32_t, SplitIt, SplitIt) const;
+
 private:
-  std::vector<std::tuple<Var, Var, double>> m_weightSplits;
-  std::vector<std::tuple<Var, Var, double>> m_randomSplits;
+  std::list<std::tuple<Var, Var, double>> m_weightSplits;
+  std::list<std::tuple<Var, Var, double>> m_randomSplits;
   std::pair<std::shared_ptr<TreeNode<Data, Var, Set>>, std::shared_ptr<TreeNode<Data, Var, Set>>> m_children;
   const Data& m_data;
   const Set m_observations;
@@ -247,6 +269,33 @@ TreeNode<Data, Var, Set>::children(
 ) const
 {
   return m_children;
+}
+
+template <typename Data, typename Var, typename Set>
+void
+TreeNode<Data, Var, Set>::makeLeaf(
+)
+{
+  m_leaf = true;
+  m_children.first.reset();
+  m_children.second.reset();
+}
+
+template <typename Data, typename Var, typename Set>
+uint32_t
+TreeNode<Data, Var, Set>::nodeCount(
+  const bool includeLeaves
+) const
+{
+  uint32_t count = 0;
+  if (!m_leaf || includeLeaves) {
+    ++count;
+  }
+  if (!m_leaf) {
+    count += m_children.first->nodeCount(includeLeaves);
+    count += m_children.second->nodeCount(includeLeaves);
+  }
+  return count;
 }
 
 template <typename Data, typename Var, typename Set>
@@ -379,8 +428,48 @@ TreeNode<Data, Var, Set>::candidateParentsSplits(
 }
 
 template <typename Data, typename Var, typename Set>
+template <typename Generator, typename SplitIt>
+bool
+TreeNode<Data, Var, Set>::chooseSplits(
+  Generator& generator,
+  const std::vector<std::tuple<Var, Var, double>>&& candidateSplits,
+  const uint32_t numSplits,
+  SplitIt weightIt,
+  SplitIt randomIt
+) const
+{
+  if (candidateSplits.empty()) {
+    // Move generator state forward to simulate picking
+    // 2 * numSplits splits
+    generator.discard(2 * numSplits);
+    LOG_MESSAGE(debug, "No candidate splits found");
+    return false;
+  }
+  LOG_MESSAGE(debug, "Number of candidate splits found: %u", candidateSplits.size());
+  std::vector<double> weights(candidateSplits.size());
+  std::transform(candidateSplits.begin(), candidateSplits.end(), weights.begin(),
+                 [] (const std::tuple<Var, Var, double>& s)
+                    { return exp(std::get<2>(s)); });
+  std::discrete_distribution<uint32_t> splitWeight(weights.begin(), weights.end());
+  std::uniform_int_distribution<uint32_t> splitRand(0, candidateSplits.size() - 1);
+  for (auto i = 0u; i < numSplits; ++i, ++weightIt, ++randomIt) {
+    auto w = splitWeight(generator);
+    *weightIt = candidateSplits[w];
+    LOG_MESSAGE(debug, "Chosen parent split using weights: (%s, %g)",
+                       m_data.varName(std::get<0>(*weightIt)),
+                       m_data(std::get<0>(*weightIt), std::get<1>(*weightIt)));
+    auto r = splitRand(generator);
+    *randomIt = candidateSplits[r];
+    LOG_MESSAGE(debug, "Chosen parent split at random: (%s, %g)",
+                       m_data.varName(std::get<0>(*randomIt)),
+                       m_data(std::get<0>(*randomIt), std::get<1>(*randomIt)));
+  }
+  return true;
+}
+
+template <typename Data, typename Var, typename Set>
 template <typename Generator>
-void
+bool
 TreeNode<Data, Var, Set>::learnParentsSplits(
   Generator& generator,
   const Set& candidateParents,
@@ -389,40 +478,55 @@ TreeNode<Data, Var, Set>::learnParentsSplits(
 )
 {
   auto splits = this->candidateParentsSplits(candidateParents, ob);
-  if (splits.empty()) {
-    m_leaf = true;
-    m_children.first.reset();
-    m_children.second.reset();
-    // Move generator state forward to simulate picking
-    // 2 * numSplits splits
-    generator.discard(2 * numSplits);
-    LOG_MESSAGE(warning, "No candidate splits found for the node");
-    return;
+  if (!splits.empty()) {
+    m_weightSplits.resize(numSplits);
+    m_randomSplits.resize(numSplits);
   }
-  std::vector<double> weights(splits.size());
-  std::transform(splits.begin(), splits.end(), weights.begin(),
-                 [] (const std::tuple<Var, Var, double>& s)
-                    { return exp(std::get<2>(s)); });
-  m_weightSplits.resize(numSplits);
-  m_randomSplits.resize(numSplits);
-  std::discrete_distribution<uint32_t> splitWeight(weights.begin(), weights.end());
-  std::uniform_int_distribution<uint32_t> splitRand(0, splits.size() - 1);
-  for (auto i = 0u; i < numSplits; ++i) {
-    auto w = splitWeight(generator);
-    m_weightSplits[i] = splits[w];
-    LOG_MESSAGE(trace, "Chosen parent split using weights: (%s, %g)",
-                       m_data.varName(std::get<0>(splits[w])),
-                       m_data(std::get<0>(splits[w]), std::get<1>(splits[w])));
-    auto r = splitRand(generator);
-    m_randomSplits[i] = splits[r];
-    LOG_MESSAGE(trace, "Chosen parent split at random: (%s, %g)",
-                       m_data.varName(std::get<0>(splits[r])),
-                       m_data(std::get<0>(splits[r]), std::get<1>(splits[r])));
-  }
+  return this->chooseSplits(generator, std::move(splits), numSplits, m_weightSplits.begin(), m_randomSplits.begin());
 }
 
 template <typename Data, typename Var, typename Set>
-const std::vector<std::tuple<Var, Var, double>>&
+template <typename Generator, typename SplitIt>
+bool
+TreeNode<Data, Var, Set>::learnParentsSplits(
+  Generator& generator,
+  const Set& candidateParents,
+  const OptimalBeta& ob,
+  const uint32_t numSplits,
+  SplitIt weightIt,
+  SplitIt randomIt
+) const
+{
+  auto splits = this->candidateParentsSplits(candidateParents, ob);
+  return this->chooseSplits(generator, std::move(splits), numSplits, weightIt, randomIt);
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename SplitIt>
+void
+TreeNode<Data, Var, Set>::setWeightSplits(
+  const SplitIt& first,
+  const SplitIt& last
+)
+{
+  m_weightSplits.clear();
+  std::copy(first, last, std::back_inserter(m_weightSplits));
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename SplitIt>
+void
+TreeNode<Data, Var, Set>::setRandomSplits(
+  const SplitIt& first,
+  const SplitIt& last
+)
+{
+  m_randomSplits.clear();
+  std::copy(first, last, std::back_inserter(m_randomSplits));
+}
+
+template <typename Data, typename Var, typename Set>
+const std::list<std::tuple<Var, Var, double>>&
 TreeNode<Data, Var, Set>::weightSplits(
 ) const
 {
@@ -430,7 +534,7 @@ TreeNode<Data, Var, Set>::weightSplits(
 }
 
 template <typename Data, typename Var, typename Set>
-const std::vector<std::tuple<Var, Var, double>>&
+const std::list<std::tuple<Var, Var, double>>&
 TreeNode<Data, Var, Set>::randomSplits(
 ) const
 {

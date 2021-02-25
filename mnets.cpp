@@ -30,6 +30,9 @@
 #include "utils/Timer.hpp"
 
 #include <boost/asio/ip/host_name.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 #include <iostream>
 #include <memory>
@@ -69,6 +72,33 @@ getAlgorithm(
   return std::unique_ptr<ModuleNetworkLearning<Data, Var, Set>>();
 }
 
+pt::ptree
+readConfigs(
+  const std::string& configFile,
+  const mxx::comm& comm
+)
+{
+  TIMER_DECLARE(tConfigs);
+  std::string configStr;
+  std::stringstream buffer;
+  if (comm.is_first()) {
+    std::ifstream cf(configFile);
+    buffer << cf.rdbuf();
+    configStr = buffer.str();
+  }
+  mxx::bcast(configStr, 0, comm);
+  if (!comm.is_first()) {
+    buffer << configStr;
+  }
+  namespace pt = boost::property_tree;
+  pt::ptree configs;
+  pt::read_json(buffer, configs);
+  if (comm.is_first()) {
+    TIMER_ELAPSED("Time taken in reading the configs: ", tConfigs);
+  }
+  return configs;
+}
+
 /**
  * @brief Learns the module network with the given parameters
  *        and writes it to the given file.
@@ -85,9 +115,19 @@ learnNetwork(
 )
 {
   auto algo = getAlgorithm<Var, UintSet<Var, Size>>(options.algoName(), comm, data);
+  auto configs = readConfigs(options.configFile(), comm);
+  if (comm.is_first()) {
+    namespace fs = boost::filesystem;
+    if (!fs::is_directory(options.outputDir())) {
+      if (!fs::create_directories(options.outputDir())) {
+        throw po::error("Output directory doesn't exist and could not be created");
+      }
+    }
+    fs::copy_file(fs::path(options.configFile()), options.outputDir() + "/configs.json", fs::copy_option::overwrite_if_exists);
+  }
   comm.barrier();
   TIMER_DECLARE(tNetwork);
-  algo->learnNetwork((comm.size() > 1) || options.forceParallel(), options.algoConfigs(), options.outputDir());
+  algo->learnNetwork((comm.size() > 1) || options.forceParallel(), configs, options.outputDir());
   comm.barrier();
   if (comm.is_first()) {
     TIMER_ELAPSED("Time taken in learning the network: ", tNetwork);

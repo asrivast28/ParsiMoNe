@@ -76,7 +76,19 @@ private:
 
   template <typename Generator>
   std::list<Module<Data, Var, Set>>
-  learnModules(const std::multimap<Var, Var>&&, const pt::ptree&) const;
+  constructModulesWithTrees(const std::multimap<Var, Var>&&, Generator&, const pt::ptree&) const;
+
+  template <typename Generator>
+  void
+  learnModulesParents(std::list<Module<Data, Var, Set>>&, Generator&, const pt::ptree&) const;
+
+  template <typename Generator>
+  void
+  learnModulesParents_parallel(std::list<Module<Data, Var, Set>>&, Generator&, const pt::ptree&) const;
+
+  template <typename Generator>
+  std::list<Module<Data, Var, Set>>
+  learnModules(const std::multimap<Var, Var>&&, const pt::ptree&, const bool = false) const;
 
   void
   writeParents(std::ofstream&, const std::unordered_map<Var, double>&, const uint32_t, const double = std::numeric_limits<double>::lowest()) const;
@@ -89,6 +101,7 @@ private:
   TIMER_DECLARE(m_tGanesh, mutable);
   TIMER_DECLARE(m_tConsensus, mutable);
   TIMER_DECLARE(m_tModules, mutable);
+  TIMER_DECLARE(m_tSync, mutable);
 }; // class LemonTree
 
 #include "detail/LemonTree.hpp"

@@ -25,6 +25,8 @@
 #include "Module.hpp"
 #include "ConsensusCluster.hpp"
 
+#include "mxx/partition.hpp"
+
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 
@@ -39,6 +41,7 @@ LemonTree<Data, Var, Set>::LemonTree(
   TIMER_RESET(m_tGanesh);
   TIMER_RESET(m_tConsensus);
   TIMER_RESET(m_tModules);
+  TIMER_RESET(m_tSync);
 }
 
 template <typename Data, typename Var, typename Set>
@@ -53,6 +56,7 @@ LemonTree<Data, Var, Set>::~LemonTree(
     TIMER_ELAPSED_NONZERO("Time taken in the GaneSH run: ", m_tGanesh);
     TIMER_ELAPSED_NONZERO("Time taken in consensus clustering: ", m_tConsensus);
     TIMER_ELAPSED_NONZERO("Time taken in learning the modules: ", m_tModules);
+    TIMER_ELAPSED_NONZERO("Time taken in synchronizing the modules: ", m_tSync);
   }
 }
 
@@ -216,26 +220,22 @@ LemonTree<Data, Var, Set>::readCandidateParents(
 template <typename Data, typename Var, typename Set>
 template <typename Generator>
 std::list<Module<Data, Var, Set>>
-LemonTree<Data, Var, Set>::learnModules(
+LemonTree<Data, Var, Set>::constructModulesWithTrees(
   const std::multimap<Var, Var>&& coClusters,
+  Generator& generator,
   const pt::ptree& modulesConfigs
 ) const
 {
-  auto randomSeed = modulesConfigs.get<uint32_t>("seed");
   auto numRuns = modulesConfigs.get<uint32_t>("num_runs");
   auto numSteps = modulesConfigs.get<uint32_t>("num_steps");
   auto burnSteps = modulesConfigs.get<uint32_t>("burn_in");
   auto sampleSteps = modulesConfigs.get<uint32_t>("sample_steps");
   auto scoreBHC = modulesConfigs.get<bool>("use_bayesian_score", true);
   auto scoreGain = modulesConfigs.get<double>("score_gain");
-  auto regFile = modulesConfigs.get<std::string>("reg_file");
-  auto betaMax = modulesConfigs.get<double>("beta_reg");
-  auto numSplits = modulesConfigs.get<uint32_t>("num_reg");
-  Generator generator(randomSeed);
   std::list<Module<Data, Var, Set>> modules;
   auto m = 0u;
-  for (auto cit = coClusters.begin(); cit != coClusters.end(); ) {
-    LOG_MESSAGE(info, "Module %u: Learning tree structures", m++);
+  for (auto cit = coClusters.begin(); cit != coClusters.end(); ++m) {
+    LOG_MESSAGE(info, "Module %u: Learning tree structures", m);
     // Get the range of variables in this cluster
     auto clusterIts = coClusters.equal_range(cit->first);
     // Add all the variables in the cluster to a set
@@ -253,6 +253,21 @@ LemonTree<Data, Var, Set>::learnModules(
     module.learnTreeStructures(std::move(sampledClusters), scoreBHC, scoreGain);
     cit = clusterIts.second;
   }
+  return modules;
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator>
+void
+LemonTree<Data, Var, Set>::learnModulesParents(
+  std::list<Module<Data, Var, Set>>& modules,
+  Generator& generator,
+  const pt::ptree& modulesConfigs
+) const
+{
+  auto regFile = modulesConfigs.get<std::string>("reg_file");
+  auto betaMax = modulesConfigs.get<double>("beta_reg");
+  auto numSplits = modulesConfigs.get<uint32_t>("num_reg");
   Set candidateParents(this->m_data.numVars());
   if (!regFile.empty()) {
     // Read candidate parents from the given file
@@ -265,10 +280,128 @@ LemonTree<Data, Var, Set>::learnModules(
     }
   }
   OptimalBeta ob(0.0, betaMax, 1e-5);
-  m = 0u;
-  for (auto& module : modules) {
-    LOG_MESSAGE(info, "Module %u: Learning parents", m++);
-    module.learnParents(generator, candidateParents, ob, numSplits);
+  auto m = 0u;
+  for (auto moduleIt = modules.begin(); moduleIt != modules.end(); ++moduleIt, ++m) {
+    LOG_MESSAGE(info, "Module %u: Learning parents", m);
+    moduleIt->learnParents(generator, candidateParents, ob, numSplits);
+  }
+  LOG_MESSAGE(info, "Done learning module parents");
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator>
+void
+LemonTree<Data, Var, Set>::learnModulesParents_parallel(
+  std::list<Module<Data, Var, Set>>& modules,
+  Generator& generator,
+  const pt::ptree& modulesConfigs
+) const
+{
+  auto regFile = modulesConfigs.get<std::string>("reg_file");
+  auto betaMax = modulesConfigs.get<double>("beta_reg");
+  auto numSplits = modulesConfigs.get<uint32_t>("num_reg");
+  Set candidateParents(this->m_data.numVars());
+  if (!regFile.empty()) {
+    if (this->m_comm.is_first()) {
+      // Read candidate parents from the given file
+      this->readCandidateParents(regFile, candidateParents);
+    }
+    set_bcast(candidateParents, 0, this->m_comm);
+  }
+  else {
+    // Add all the variables as candidate parents
+    for (Var v = 0u; v < candidateParents.max(); ++v) {
+      candidateParents.insert(v);
+    }
+  }
+  OptimalBeta ob(0.0, betaMax, 1e-5);
+  std::vector<uint32_t> moduleNodeCount(modules.size());
+  auto totalNodes = 0u;
+  auto moduleCit = modules.cbegin();
+  for (auto m = 0u; m < modules.size(); ++m, ++moduleCit) {
+    moduleNodeCount[m] = moduleCit->nodeCount();
+    totalNodes += moduleNodeCount[m];
+  }
+  std::vector<uint32_t> moduleNodeCountPrefix(moduleNodeCount.size());
+  std::partial_sum(moduleNodeCount.cbegin(), moduleNodeCount.cend(), moduleNodeCountPrefix.begin());
+  mxx::blk_dist block(totalNodes, this->m_comm.size(), this->m_comm.rank());
+  // First, advance the PRNG state to account for the number of
+  // random generations for nodes on the previous ranks
+  generator.discard(block.eprefix_size() * 2 * numSplits);
+  // XXX: We need to track the validity of nodes because some nodes may not learn any splits
+  //      and that information will be required for synchornization later
+  std::vector<uint8_t> myValidNodes(block.local_size());
+  std::vector<std::tuple<Var, Var, double>> myNodeSplits(block.local_size() * 2 * numSplits);
+  // Find the indices for the modules which contain the first and last node on this rank
+  auto myFirst = std::distance(moduleNodeCountPrefix.cbegin(),
+                               std::lower_bound(moduleNodeCountPrefix.cbegin(),
+                                                moduleNodeCountPrefix.cend(),
+                                                block.eprefix_size() + 1));
+  auto myLast = std::distance(moduleNodeCountPrefix.cbegin(),
+                              std::lower_bound(moduleNodeCountPrefix.cbegin(),
+                                               moduleNodeCountPrefix.cend(),
+                                               block.iprefix_size()));
+  auto moduleIt = std::next(modules.begin(), myFirst);
+  auto validIt = myValidNodes.begin();
+  auto splitIt = myNodeSplits.begin();
+  auto prevNodeCount = block.eprefix_size();
+  for (auto m = myFirst; m <= myLast; ++m, ++moduleIt) {
+    auto firstNode = prevNodeCount - (moduleNodeCountPrefix[m] - moduleNodeCount[m]);
+    auto numNodes = std::min(static_cast<uint32_t>(block.iprefix_size()), moduleNodeCountPrefix[m]) - prevNodeCount;
+    if (numNodes > 0) {
+      LOG_MESSAGE(info, "Module %u: Learning parents for %u nodes (starting node index = %u)", m, numNodes, firstNode);
+      moduleIt->learnParents(generator, candidateParents, ob, numSplits, firstNode, numNodes, validIt, splitIt);
+      prevNodeCount += numNodes;
+    }
+  }
+  myNodeSplits.resize(std::distance(myNodeSplits.begin(), splitIt));
+  LOG_MESSAGE(info, "Done learning module parents");
+  this->m_comm.barrier();
+  TIMER_START(m_tSync);
+  // XXX: We can determine the number of elements on each processor for these calls
+  //      and eliminate a gather call. Need to evaluate if it is worth the effort
+  auto allValidNodes = mxx::allgatherv(myValidNodes, this->m_comm);
+  auto allNodeSplits = mxx::allgatherv(myNodeSplits, this->m_comm);
+  moduleIt = modules.begin();
+  auto validCit = allValidNodes.cbegin();
+  auto splitCit = allNodeSplits.cbegin();
+  for (auto m = 0u; m < modules.size(); ++m, ++moduleIt) {
+    // Synchronize the node parents for this module
+    LOG_MESSAGE(info, "Module %u: Synchronizing parents for all nodes", m);
+    moduleIt->syncParents(numSplits, validCit, splitCit);
+  }
+  LOG_MESSAGE(info, "Done synchronizing module parents");
+  this->m_comm.barrier();
+  TIMER_PAUSE(m_tSync);
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator>
+std::list<Module<Data, Var, Set>>
+LemonTree<Data, Var, Set>::learnModules(
+  const std::multimap<Var, Var>&& coClusters,
+  const pt::ptree& modulesConfigs,
+  const bool isParallel
+) const
+{
+  auto randomSeed = modulesConfigs.get<uint32_t>("seed");
+  Generator generator(randomSeed);
+  TIMER_DECLARE(tConstruct);
+  auto modules = this->constructModulesWithTrees(std::move(coClusters), generator, modulesConfigs);
+  this->m_comm.barrier();
+  if (this->m_comm.is_first()) {
+    TIMER_ELAPSED("Time taken in learning module trees: ", tConstruct);
+  }
+  TIMER_DECLARE(tParents);
+  if (!isParallel) {
+    this->learnModulesParents(modules, generator, modulesConfigs);
+  }
+  else {
+    this->learnModulesParents_parallel(modules, generator, modulesConfigs);
+  }
+  this->m_comm.barrier();
+  if (this->m_comm.is_first()) {
+    TIMER_ELAPSED("Time taken in learning module parents: ", tParents);
   }
   return modules;
 }
@@ -349,6 +482,8 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
 ) const
 {
   using Generator = std::mt19937_64;
+
+  /* GaneSH clustering */
   TIMER_START(m_tGanesh);
   const auto& ganeshConfigs = algoConfigs.get_child("ganesh");
   auto varClusters = this->clusterVarsGanesh<Generator>(ganeshConfigs);
@@ -360,6 +495,8 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
     this->writeVarClusters(clusterFile, varClusters);
     TIMER_PAUSE(m_tWrite);
   }
+
+  /* Consensus clustering */
   TIMER_START(m_tConsensus);
   const auto& consensusConfigs = algoConfigs.get_child("tight_clusters");
   auto coClusters = this->clusterConsensus(std::move(varClusters), consensusConfigs);
@@ -371,6 +508,8 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
     this->writeConsensusCluster(consensusFile, coClusters);
     TIMER_PAUSE(m_tWrite);
   }
+
+  /* Module learning */
   TIMER_START(m_tModules);
   const auto& modulesConfigs = algoConfigs.get_child("regulators");
   auto modules = this->learnModules<Generator>(std::move(coClusters), modulesConfigs);
@@ -387,11 +526,54 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
 template <typename Data, typename Var, typename Set>
 void
 LemonTree<Data, Var, Set>::learnNetwork_parallel(
-  const pt::ptree&,
-  const std::string&
+  const pt::ptree& algoConfigs,
+  const std::string& outputDir
 ) const
 {
-  throw NotImplementedError("Lemon Tree: Parallel algorithm is not implemented yet");
+  using Generator = std::mt19937_64;
+
+  /* GaneSH clustering */
+  TIMER_START(m_tGanesh);
+  const auto& ganeshConfigs = algoConfigs.get_child("ganesh");
+  auto varClusters = this->clusterVarsGanesh<Generator>(ganeshConfigs);
+  this->m_comm.barrier();
+  TIMER_PAUSE(m_tGanesh);
+  auto clusterFile = ganeshConfigs.get<std::string>("output_file");
+  if (!clusterFile.empty() && this->m_comm.is_first()) {
+    TIMER_START(m_tWrite);
+    clusterFile = outputDir + "/" + clusterFile;
+    this->writeVarClusters(clusterFile, varClusters);
+    TIMER_PAUSE(m_tWrite);
+  }
+  this->m_comm.barrier();
+
+  /* Consensus clustering */
+  TIMER_START(m_tConsensus);
+  const auto& consensusConfigs = algoConfigs.get_child("tight_clusters");
+  auto coClusters = this->clusterConsensus(std::move(varClusters), consensusConfigs);
+  TIMER_PAUSE(m_tConsensus);
+  auto consensusFile = consensusConfigs.get<std::string>("output_file");
+  if (!consensusFile.empty() && this->m_comm.is_first()) {
+    TIMER_START(m_tWrite);
+    consensusFile = outputDir + "/" + consensusFile;
+    this->writeConsensusCluster(consensusFile, coClusters);
+    TIMER_PAUSE(m_tWrite);
+  }
+  this->m_comm.barrier();
+
+  /* Module learning */
+  TIMER_START(m_tModules);
+  const auto& modulesConfigs = algoConfigs.get_child("regulators");
+  auto modules = this->learnModules<Generator>(std::move(coClusters), modulesConfigs, true);
+  this->m_comm.barrier();
+  TIMER_PAUSE(m_tModules);
+  auto modulesFile = modulesConfigs.get<std::string>("output_file");
+  if (!modulesFile.empty() && this->m_comm.is_first()) {
+    TIMER_START(m_tWrite);
+    modulesFile = outputDir + "/" + modulesFile;
+    this->writeModules(modulesFile, modules);
+    TIMER_PAUSE(m_tWrite);
+  }
 }
 
 #endif // DETAIL_LEMONTREE_HPP_

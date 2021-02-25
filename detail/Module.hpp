@@ -34,9 +34,20 @@ public:
   void
   learnTreeStructures(const std::list<std::list<Set>>&&, const bool, const double);
 
+  uint32_t
+  nodeCount() const;
+
   template <typename Generator>
   void
   learnParents(Generator&, const Set&, const OptimalBeta&, const uint32_t);
+
+  template <typename Generator, typename ValidIt, typename SplitIt>
+  void
+  learnParents(Generator&, const Set&, const OptimalBeta&, const uint32_t, uint32_t, uint32_t, ValidIt&, SplitIt&);
+
+  template <typename ValidIt, typename SplitIt>
+  void
+  syncParents(const uint32_t, ValidIt&, SplitIt&);
 
   const std::unordered_map<Var, double>&
   allParents() const;
@@ -51,6 +62,9 @@ public:
 private:
   std::shared_ptr<TreeNode<Data, Var, Set>>
   bestOrderedMerge(const std::list<std::shared_ptr<TreeNode<Data, Var, Set>>>&, const bool) const;
+
+  void
+  updateParentsWeights(const TreeNode<Data, Var, Set>* const);
 
 private:
   std::list<std::shared_ptr<TreeNode<Data, Var, Set>>> m_trees;
@@ -148,6 +162,44 @@ Module<Data, Var, Set>::learnTreeStructures(
 }
 
 template <typename Data, typename Var, typename Set>
+uint32_t
+Module<Data, Var, Set>::nodeCount(
+) const
+{
+  uint32_t count = 0u;
+  for (const auto& tree : m_trees) {
+    count += tree->nodeCount();
+  }
+  return count;
+}
+
+template <typename Data, typename Var, typename Set>
+void
+Module<Data, Var, Set>::updateParentsWeights(
+  const TreeNode<Data, Var, Set>* const node
+)
+{
+  auto nodeObs = node->observations().size();
+  auto factor = static_cast<double>(nodeObs) / m_data.numObs();
+  for (const auto& w : node->weightSplits()) {
+    auto var = std::get<0>(w);
+    auto wit = m_allParents.find(var);
+    if (wit == m_allParents.end()) {
+      wit = m_allParents.insert(std::make_pair(var, 0.0)).first;
+    }
+    wit->second += exp(std::get<2>(w) / nodeObs) * factor;
+  }
+  for (const auto& r : node->randomSplits()) {
+    auto var = std::get<0>(r);
+    auto rit = m_randParents.find(var);
+    if (rit == m_randParents.end()) {
+      rit = m_randParents.insert(std::make_pair(var, 0.0)).first;
+    }
+    rit->second += exp(std::get<2>(r) / nodeObs) * factor;
+  }
+}
+
+template <typename Data, typename Var, typename Set>
 template <typename Generator>
 void
 Module<Data, Var, Set>::learnParents(
@@ -159,25 +211,80 @@ Module<Data, Var, Set>::learnParents(
 {
   for (auto& tree : m_trees) {
     for (auto* node : tree->nodes()) {
-      node->learnParentsSplits(generator, candidateParents, ob, numSplits);
-      auto nodeObs = node->observations().size();
-      auto factor = static_cast<double>(nodeObs) / m_data.numObs();
-      for (const auto& w : node->weightSplits()) {
-        auto var = std::get<0>(w);
-        auto wit = m_allParents.find(var);
-        if (wit == m_allParents.end()) {
-          wit = m_allParents.insert(std::make_pair(var, 0.0)).first;
-        }
-        wit->second += exp(std::get<2>(w) / nodeObs) * factor;
+      if (node->learnParentsSplits(generator, candidateParents, ob, numSplits)) {
+        this->updateParentsWeights(node);
       }
-      for (const auto& r : node->randomSplits()) {
-        auto var = std::get<0>(r);
-        auto rit = m_randParents.find(var);
-        if (rit == m_randParents.end()) {
-          rit = m_randParents.insert(std::make_pair(var, 0.0)).first;
-        }
-        rit->second += exp(std::get<2>(r) / nodeObs) * factor;
+      else {
+        node->makeLeaf();
       }
+    }
+  }
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator, typename ValidIt, typename SplitIt>
+void
+Module<Data, Var, Set>::learnParents(
+  Generator& generator,
+  const Set& candidateParents,
+  const OptimalBeta& ob,
+  const uint32_t numSplits,
+  uint32_t firstNode,
+  uint32_t numNodes,
+  ValidIt& validIt,
+  SplitIt& splitIt
+)
+{
+  for (auto& tree : m_trees) {
+    auto nodes = tree->nodes();
+    if (firstNode >= nodes.size()) {
+      firstNode -= nodes.size();
+      continue;
+    }
+    auto nodeIt = std::next(nodes.begin(), firstNode);
+    auto lastNode = std::min(firstNode + numNodes, static_cast<uint32_t>(nodes.size()));
+    numNodes -= (lastNode - firstNode);
+    for (auto n = firstNode; n < lastNode; ++n, ++nodeIt) {
+      auto* node = *nodeIt;
+      auto weightIt = splitIt;
+      auto randomIt = std::next(splitIt, numSplits);
+      if (node->learnParentsSplits(generator, candidateParents, ob, numSplits, weightIt, randomIt)) {
+        *validIt = 1;
+        std::advance(splitIt, 2 * numSplits);
+      }
+      else {
+        *validIt = 0;
+      }
+      ++validIt;
+    }
+    firstNode = 0;
+  }
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename ValidIt, typename SplitIt>
+void
+Module<Data, Var, Set>::syncParents(
+  const uint32_t numSplits,
+  ValidIt& validIt,
+  SplitIt& splitIt
+)
+{
+  for (auto& tree : m_trees) {
+    for (auto* node : tree->nodes()) {
+      if (*validIt == 1) {
+        auto last = std::next(splitIt, numSplits);
+        node->setWeightSplits(splitIt, last);
+        splitIt = last;
+        last = std::next(splitIt, numSplits);
+        node->setRandomSplits(splitIt, last);
+        splitIt = last;
+        this->updateParentsWeights(node);
+      }
+      else {
+        node->makeLeaf();
+      }
+      ++validIt;
     }
   }
 }

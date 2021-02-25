@@ -20,7 +20,6 @@
 #include "ProgramOptions.hpp"
 
 #include <boost/filesystem.hpp>
-#include <boost/property_tree/json_parser.hpp>
 
 #include <iostream>
 
@@ -29,13 +28,11 @@ namespace fs = boost::filesystem;
 
 ProgramOptions::ProgramOptions(
 ) : m_desc("Module Network Learning"),
-    m_algoConfigs(),
     m_logLevel(),
     m_logFile(),
     m_dataFile(),
     m_algoName(),
     m_outputDir(),
-    m_counterType(),
     m_configFile(),
     m_numVars(),
     m_numObs(),
@@ -67,7 +64,6 @@ ProgramOptions::ProgramOptions(
   po::options_description advanced("Advanced options");
   advanced.add_options()
     ("config,g", po::value<std::string>(&m_configFile)->default_value(""), "JSON file with algorithm specific configurations")
-    ("counter,t", po::value<std::string>(&m_counterType)->default_value("ct"), "Type of the counter to be used")
     ("warmup,w", po::bool_switch(&m_warmupMPI)->default_value(false), "Warmup the MPI_Alltoall(v) functions before starting execution")
     ;
 
@@ -112,13 +108,6 @@ ProgramOptions::parse(
   if (!fs::exists(fs::path(m_configFile))) {
     throw po::error("Couldn't find the algorithm configuration file");
   }
-  pt::read_json(m_configFile, m_algoConfigs);
-  if (!fs::is_directory(m_outputDir)) {
-    if (!fs::create_directories(m_outputDir)) {
-      throw po::error("Output directory doesn't exist and could not be created");
-    }
-  }
-  fs::copy_file(fs::path(m_configFile), m_outputDir + "/configs.json", fs::copy_option::overwrite_if_exists);
 }
 
 uint32_t
@@ -199,10 +188,10 @@ ProgramOptions::outputDir(
 }
 
 const std::string&
-ProgramOptions::counterType(
+ProgramOptions::configFile(
 ) const
 {
-  return m_counterType;
+  return m_configFile;
 }
 
 bool
@@ -238,13 +227,6 @@ ProgramOptions::logFile(
 ) const
 {
   return m_logFile;
-}
-
-const pt::ptree&
-ProgramOptions::algoConfigs(
-) const
-{
-  return m_algoConfigs;
 }
 
 ProgramOptions::~ProgramOptions(
