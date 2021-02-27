@@ -21,6 +21,7 @@
 #define DETAIL_TREENODE_HPP_
 
 #include "Assignment.hpp"
+#include "Generator.hpp"
 
 
 class OptimalBeta {
@@ -441,7 +442,7 @@ TreeNode<Data, Var, Set>::chooseSplits(
   if (candidateSplits.empty()) {
     // Move generator state forward to simulate picking
     // 2 * numSplits splits
-    generator.discard(2 * numSplits);
+    advance(generator, 2 * numSplits);
     LOG_MESSAGE(debug, "No candidate splits found");
     return false;
   }

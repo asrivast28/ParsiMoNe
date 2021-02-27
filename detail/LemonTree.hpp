@@ -24,6 +24,7 @@
 #include "Ganesh.hpp"
 #include "Module.hpp"
 #include "ConsensusCluster.hpp"
+#include "Generator.hpp"
 
 #include "mxx/partition.hpp"
 
@@ -327,7 +328,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_parallel(
   mxx::blk_dist block(totalNodes, this->m_comm.size(), this->m_comm.rank());
   // First, advance the PRNG state to account for the number of
   // random generations for nodes on the previous ranks
-  generator.discard(block.eprefix_size() * 2 * numSplits);
+  advance(generator, block.eprefix_size() * 2 * numSplits);
   // XXX: We need to track the validity of nodes because some nodes may not learn any splits
   //      and that information will be required for synchornization later
   std::vector<uint8_t> myValidNodes(block.local_size());
