@@ -64,10 +64,9 @@ computeLogLikelihood(
  * @tparam Data Type of the data provider.
  * @tparam Var Type of variables stored in the cluster.
  * @tparam Set Type of container used to store the clusters.
- * @tparam Generator Type of PRNG used for generating random numbers.
  */
-template <typename Data, typename Var, typename Set, typename Generator>
-class SecondaryCluster : public Cluster<Data, Var, Set, Generator> {
+template <typename Data, typename Var, typename Set>
+class SecondaryCluster : public Cluster<Data, Var, Set> {
 public:
   SecondaryCluster(const Data&, const Var);
 
@@ -78,29 +77,29 @@ public:
   ~SecondaryCluster();
 
   double
-  score(const Cluster<Data, Var, Set, Generator>&);
+  score(const Cluster<Data, Var, Set>&);
 
   double
-  scoreMerge(const Cluster<Data, Var, Set, Generator>&, const SecondaryCluster&, const bool = false);
+  scoreMerge(const Cluster<Data, Var, Set>&, const SecondaryCluster&, const bool = false);
 
   double
-  scoreInsertPrimary(const Cluster<Data, Var, Set, Generator>&, const Var, const bool = false);
+  scoreInsertPrimary(const Cluster<Data, Var, Set>&, const Var, const bool = false);
 
   double
-  scoreInsertPrimary(const Cluster<Data, Var, Set, Generator>&, const Set&, const bool = false);
+  scoreInsertPrimary(const Cluster<Data, Var, Set>&, const Set&, const bool = false);
 
   double
-  scoreInsertSecondary(const Cluster<Data, Var, Set, Generator>&, const Var, const bool = false);
+  scoreInsertSecondary(const Cluster<Data, Var, Set>&, const Var, const bool = false);
 
   double
-  scoreErasePrimary(const Cluster<Data, Var, Set, Generator>&, const Var, const bool = false);
+  scoreErasePrimary(const Cluster<Data, Var, Set>&, const Var, const bool = false);
 
   double
-  scoreEraseSecondary(const Cluster<Data, Var, Set, Generator>&, const Var, const bool = false);
+  scoreEraseSecondary(const Cluster<Data, Var, Set>&, const Var, const bool = false);
 
 private:
   void
-  scoreCache(const Cluster<Data, Var, Set, Generator>&);
+  scoreCache(const Cluster<Data, Var, Set>&);
 
 private:
   Set m_primary;
@@ -110,17 +109,17 @@ private:
   uint32_t m_count;
 };
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Constructs an empty secondary cluster.
  *
  * @param data The data provider.
  * @param numSecondary Number of secondary variables.
  */
-SecondaryCluster<Data, Var, Set, Generator>::SecondaryCluster(
+SecondaryCluster<Data, Var, Set>::SecondaryCluster(
   const Data& data,
   const Var numSecondary
-) : Cluster<Data, Var, Set, Generator>(data, numSecondary),
+) : Cluster<Data, Var, Set>(data, numSecondary),
     m_primary(),
     m_score(std::nan("")),
     m_sum(),
@@ -129,15 +128,15 @@ SecondaryCluster<Data, Var, Set, Generator>::SecondaryCluster(
 {
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Copy constructor.
  *
  * @param other The secondary cluster to be copied.
  */
-SecondaryCluster<Data, Var, Set, Generator>::SecondaryCluster(
-  const SecondaryCluster<Data, Var, Set, Generator>& other
-) : Cluster<Data, Var, Set, Generator>(other),
+SecondaryCluster<Data, Var, Set>::SecondaryCluster(
+  const SecondaryCluster<Data, Var, Set>& other
+) : Cluster<Data, Var, Set>(other),
     m_primary(other.m_primary),
     m_score(other.m_score),
     m_sum(other.m_sum),
@@ -146,7 +145,7 @@ SecondaryCluster<Data, Var, Set, Generator>::SecondaryCluster(
 {
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Merge constructor creates a new secondary cluster
  *        by merging the two given clusters.
@@ -154,10 +153,10 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @param first The first secondary cluster to be merged.
  * @param second The second secondary cluster to be merged.
  */
-SecondaryCluster<Data, Var, Set, Generator>::SecondaryCluster(
-  const SecondaryCluster<Data, Var, Set, Generator>& first,
-  const SecondaryCluster<Data, Var, Set, Generator>& second
-) : Cluster<Data, Var, Set, Generator>(first, second),
+SecondaryCluster<Data, Var, Set>::SecondaryCluster(
+  const SecondaryCluster<Data, Var, Set>& first,
+  const SecondaryCluster<Data, Var, Set>& second
+) : Cluster<Data, Var, Set>(first, second),
     m_primary(first.m_primary),
     m_score(std::nan("")),
     m_sum(first.m_sum + second.m_sum),
@@ -169,16 +168,16 @@ SecondaryCluster<Data, Var, Set, Generator>::SecondaryCluster(
   m_score = computeLogLikelihood(m_count, m_sum, m_sum2);
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Default destructor.
  */
-SecondaryCluster<Data, Var, Set, Generator>::~SecondaryCluster(
+SecondaryCluster<Data, Var, Set>::~SecondaryCluster(
 )
 {
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Caches the score of this cluster corresponding
  *        to the given elements in the primary cluster.
@@ -186,8 +185,8 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @param primary The primary cluster to be used for score computations.
  */
 void
-SecondaryCluster<Data, Var, Set, Generator>::scoreCache(
-  const Cluster<Data, Var, Set, Generator>& primary
+SecondaryCluster<Data, Var, Set>::scoreCache(
+  const Cluster<Data, Var, Set>& primary
 )
 {
   // We need to compute the score if it has never been computed
@@ -215,7 +214,7 @@ SecondaryCluster<Data, Var, Set, Generator>::scoreCache(
   }
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Returns the score of this secondary cluster corresponding
  *        to the given primary cluster elements.
@@ -223,15 +222,15 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @param primary The primary cluster to be used for score computations.
  */
 double
-SecondaryCluster<Data, Var, Set, Generator>::score(
-  const Cluster<Data, Var, Set, Generator>& primary
+SecondaryCluster<Data, Var, Set>::score(
+  const Cluster<Data, Var, Set>& primary
 )
 {
   this->scoreCache(primary);
   return m_score;
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Computes the score of this cluster when another secondary cluster
  *        is merged with it, optionally updating the cached score.
@@ -243,9 +242,9 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @return The changed score of this cluster after merging the clusters.
  */
 double
-SecondaryCluster<Data, Var, Set, Generator>::scoreMerge(
-  const Cluster<Data, Var, Set, Generator>& primary,
-  const SecondaryCluster<Data, Var, Set, Generator>& other,
+SecondaryCluster<Data, Var, Set>::scoreMerge(
+  const Cluster<Data, Var, Set>& primary,
+  const SecondaryCluster<Data, Var, Set>& other,
   const bool cache
 )
 {
@@ -264,7 +263,7 @@ SecondaryCluster<Data, Var, Set, Generator>::scoreMerge(
   return score;
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Computes the score of this secondary cluster when a primary variable
  *        is inserted, optionally updating the cached score.
@@ -276,8 +275,8 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @return The changed score of this cluster after inserting the variable.
  */
 double
-SecondaryCluster<Data, Var, Set, Generator>::scoreInsertPrimary(
-  const Cluster<Data, Var, Set, Generator>& primary,
+SecondaryCluster<Data, Var, Set>::scoreInsertPrimary(
+  const Cluster<Data, Var, Set>& primary,
   const Var given,
   const bool cache
 )
@@ -305,7 +304,7 @@ SecondaryCluster<Data, Var, Set, Generator>::scoreInsertPrimary(
   return score;
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Computes the score of this secondary cluster when multiple primary variables
  *        are inserted, optionally updating the cached score.
@@ -317,8 +316,8 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @return The changed score of this cluster after inserting the variables.
  */
 double
-SecondaryCluster<Data, Var, Set, Generator>::scoreInsertPrimary(
-  const Cluster<Data, Var, Set, Generator>& primary,
+SecondaryCluster<Data, Var, Set>::scoreInsertPrimary(
+  const Cluster<Data, Var, Set>& primary,
   const Set& newElements,
   const bool cache
 )
@@ -349,7 +348,7 @@ SecondaryCluster<Data, Var, Set, Generator>::scoreInsertPrimary(
   return score;
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Computes the score of this primary cluster when a secondary variable
  *        is inserted, optionally updating the cached score.
@@ -361,8 +360,8 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @return The changed score of this cluster after inserting the variable.
  */
 double
-SecondaryCluster<Data, Var, Set, Generator>::scoreInsertSecondary(
-  const Cluster<Data, Var, Set, Generator>& primary,
+SecondaryCluster<Data, Var, Set>::scoreInsertSecondary(
+  const Cluster<Data, Var, Set>& primary,
   const Var given,
   const bool cache
 )
@@ -389,7 +388,7 @@ SecondaryCluster<Data, Var, Set, Generator>::scoreInsertSecondary(
   return score;
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Computes the score of this cluster when a primary variable
  *        is erased, optionally updating the cached score.
@@ -401,8 +400,8 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @return The changed score of this cluster after erasing the variable.
  */
 double
-SecondaryCluster<Data, Var, Set, Generator>::scoreErasePrimary(
-  const Cluster<Data, Var, Set, Generator>& primary,
+SecondaryCluster<Data, Var, Set>::scoreErasePrimary(
+  const Cluster<Data, Var, Set>& primary,
   const Var given,
   const bool cache
 )
@@ -430,7 +429,7 @@ SecondaryCluster<Data, Var, Set, Generator>::scoreErasePrimary(
   return score;
 }
 
-template <typename Data, typename Var, typename Set, typename Generator>
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Computes the score of this cluster when a secondary variable
  *        is erased, optionally updating the cached score.
@@ -442,8 +441,8 @@ template <typename Data, typename Var, typename Set, typename Generator>
  * @return The changed score of this cluster after erasing the variable.
  */
 double
-SecondaryCluster<Data, Var, Set, Generator>::scoreEraseSecondary(
-  const Cluster<Data, Var, Set, Generator>& primary,
+SecondaryCluster<Data, Var, Set>::scoreEraseSecondary(
+  const Cluster<Data, Var, Set>& primary,
   const Var given,
   const bool cache
 )

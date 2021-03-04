@@ -69,7 +69,7 @@ private:
 
   template <typename Generator>
   std::list<std::list<Set>>
-  clusterObsGanesh(const uint32_t, const uint32_t, const uint32_t, const uint32_t, Generator* const, const Set&) const;
+  clusterObsGanesh(const uint32_t, const uint32_t, const uint32_t, const uint32_t, Generator&, const Set&) const;
 
   void
   readCandidateParents(const std::string&, Set&) const;

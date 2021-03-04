@@ -76,16 +76,16 @@ LemonTree<Data, Var, Set>::clusterVarsGanesh(
   auto numRuns = ganeshConfigs.get<uint32_t>("num_runs");
   auto numSteps = ganeshConfigs.get<uint32_t>("num_steps");
   std::list<std::list<Set>> sampledClusters;
+  Ganesh<Data, Var, Set> ganesh(this->m_data);
   for (auto r = 0u; r < numRuns; ++r) {
     LOG_MESSAGE(info, "Run %u", r);
     // XXX: Seeding PRNG in this way to compare the results
     //      with Lemon-Tree; the seeding can be moved outside later
     Generator generator(randomSeed + r);
-    Ganesh<Data, Var, Set, Generator> ganesh(this->m_comm, this->m_data, &generator);
-    ganesh.initializeRandom(initClusters);
+    ganesh.initializeRandom(generator, initClusters);
     for (auto s = 0u; s <= numSteps; ++s) {
       LOG_MESSAGE(info, "Step %u", s);
-      ganesh.clusterTwoWay();
+      ganesh.clusterTwoWay(generator);
     }
     // XXX: Lemon Tree writes out only the last sampled cluster
     // and uses that for the downstream tasks per run
@@ -166,23 +166,23 @@ LemonTree<Data, Var, Set>::clusterObsGanesh(
   const uint32_t numSteps,
   const uint32_t burnSteps,
   const uint32_t sampleSteps,
-  Generator* const generator,
+  Generator& generator,
   const Set& clusterVars
 ) const
 {
-  // Initialize Gibbs sampler algorithm for this cluster
-  Ganesh<Data, Var, Set, Generator> ganesh(this->m_comm, this->m_data, generator);
-  ganesh.initializeGiven(std::list<Set>(1, clusterVars));
   std::list<std::list<Set>> sampledClusters;
+  // Initialize Gibbs sampler algorithm for this cluster
+  Ganesh<Data, Var, Set> ganesh(this->m_data);
+  ganesh.initializeGiven(generator, std::list<Set>(1, clusterVars));
   for (auto r = 0u; r < numRuns; ++r) {
     auto s = 0u;
     for ( ; s < burnSteps; ++s) {
       LOG_MESSAGE(info, "Step %u (burn in)", s);
-      ganesh.clusterSecondary();
+      ganesh.clusterSecondary(generator);
     }
     for ( ; s < numSteps; ++s) {
       LOG_MESSAGE(info, "Step %u (sampling)", s);
-      ganesh.clusterSecondary();
+      ganesh.clusterSecondary(generator);
       if ((numSteps - (s + 1)) % sampleSteps == 0) {
         LOG_MESSAGE(info, "Sampling");
         // There should be only one primary cluster; get a reference to it
@@ -249,7 +249,7 @@ LemonTree<Data, Var, Set>::constructModulesWithTrees(
     auto& module = modules.back();
     // Sample observation clusters for this module
     auto sampledClusters = this->clusterObsGanesh(numRuns, numSteps, burnSteps, sampleSteps,
-                                                  &generator, module.variables());
+                                                  generator, module.variables());
     // Learn tree structures from the observation clusters
     module.learnTreeStructures(std::move(sampledClusters), scoreBHC, scoreGain);
     cit = clusterIts.second;
@@ -485,6 +485,10 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
   using Generator = std::mt19937_64;
 
   /* GaneSH clustering */
+  if (algoConfigs.count("ganesh") == 0) {
+    std::cerr << "WARNING: Skipping ganesh and other downstream tasks" << std::endl;
+    return;
+  }
   TIMER_START(m_tGanesh);
   const auto& ganeshConfigs = algoConfigs.get_child("ganesh");
   auto varClusters = this->clusterVarsGanesh<Generator>(ganeshConfigs);
@@ -498,6 +502,10 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
   }
 
   /* Consensus clustering */
+  if (algoConfigs.count("tight_clusters") == 0) {
+    std::cerr << "WARNING: Skipping tight_clusters and other downstream tasks" << std::endl;
+    return;
+  }
   TIMER_START(m_tConsensus);
   const auto& consensusConfigs = algoConfigs.get_child("tight_clusters");
   auto coClusters = this->clusterConsensus(std::move(varClusters), consensusConfigs);
@@ -511,6 +519,10 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
   }
 
   /* Module learning */
+  if (algoConfigs.count("regulators") == 0) {
+    std::cerr << "WARNING: Skipping regulators and other downstream tasks" << std::endl;
+    return;
+  }
   TIMER_START(m_tModules);
   const auto& modulesConfigs = algoConfigs.get_child("regulators");
   auto modules = this->learnModules<Generator>(std::move(coClusters), modulesConfigs);
@@ -534,6 +546,12 @@ LemonTree<Data, Var, Set>::learnNetwork_parallel(
   using Generator = std::mt19937_64;
 
   /* GaneSH clustering */
+  if (algoConfigs.count("ganesh") == 0) {
+    if (this->m_comm.is_first()) {
+      std::cerr << "WARNING: Skipping ganesh and other downstream tasks" << std::endl;
+    }
+    return;
+  }
   TIMER_START(m_tGanesh);
   const auto& ganeshConfigs = algoConfigs.get_child("ganesh");
   auto varClusters = this->clusterVarsGanesh<Generator>(ganeshConfigs);
@@ -549,6 +567,12 @@ LemonTree<Data, Var, Set>::learnNetwork_parallel(
   this->m_comm.barrier();
 
   /* Consensus clustering */
+  if (algoConfigs.count("tight_clusters") == 0) {
+    if (this->m_comm.is_first()) {
+      std::cerr << "WARNING: Skipping tight_clusters and other downstream tasks" << std::endl;
+    }
+    return;
+  }
   TIMER_START(m_tConsensus);
   const auto& consensusConfigs = algoConfigs.get_child("tight_clusters");
   auto coClusters = this->clusterConsensus(std::move(varClusters), consensusConfigs);
@@ -563,6 +587,12 @@ LemonTree<Data, Var, Set>::learnNetwork_parallel(
   this->m_comm.barrier();
 
   /* Module learning */
+  if (algoConfigs.count("regulators") == 0) {
+    if (this->m_comm.is_first()) {
+      std::cerr << "WARNING: Skipping regulators and other downstream tasks" << std::endl;
+    }
+    return;
+  }
   TIMER_START(m_tModules);
   const auto& modulesConfigs = algoConfigs.get_child("regulators");
   auto modules = this->learnModules<Generator>(std::move(coClusters), modulesConfigs, true);
