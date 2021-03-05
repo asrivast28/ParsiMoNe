@@ -25,8 +25,6 @@
 #include "Module.hpp"
 #include "ConsensusCluster.hpp"
 
-#include "mxx/partition.hpp"
-
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 
@@ -62,41 +60,54 @@ LemonTree<Data, Var, Set>::~LemonTree(
 
 template <typename Data, typename Var, typename Set>
 template <typename Generator>
+std::list<Set>
+LemonTree<Data, Var, Set>::singleGaneshRun(
+  Generator& generator,
+  const pt::ptree& ganeshConfigs
+) const
+{
+  auto numSteps = ganeshConfigs.get<uint32_t>("num_steps");
+  auto initClusters = ganeshConfigs.get<Var>("init_num_clust");
+  if ((initClusters == 0) || (initClusters > this->m_data.numVars())) {
+    initClusters = this->m_data.numVars() / 2;
+  }
+  Ganesh<Data, Var, Set> ganesh(this->m_data);
+  ganesh.initializeRandom(generator, initClusters);
+  for (auto s = 0u; s <= numSteps; ++s) {
+    LOG_MESSAGE(info, "Step %u", s);
+    ganesh.clusterTwoWay(generator, this->m_comm);
+  }
+  // XXX: Lemon Tree writes out only the last sampled cluster
+  // and uses that for the downstream tasks per run
+  // We can replicate this behavior by storing only the last sample in each run
+  // Further, we do not use -burn_in and -sample_steps because they do not
+  // have any effect on the outcome
+  LOG_MESSAGE(info, "Sampling");
+  const auto& primaryClusters = ganesh.primaryClusters();
+  std::list<Set> varClusters;
+  for (const auto& cluster : primaryClusters) {
+    varClusters.push_back(cluster.elements());
+  }
+  return varClusters;
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator>
 std::list<std::list<Set>>
 LemonTree<Data, Var, Set>::clusterVarsGanesh(
   const pt::ptree& ganeshConfigs
 ) const
 {
   auto randomSeed = ganeshConfigs.get<uint32_t>("seed");
-  auto initClusters = ganeshConfigs.get<Var>("init_num_clust");
-  if ((initClusters == 0) || (initClusters > this->m_data.numVars())) {
-    initClusters = this->m_data.numVars() / 2;
-  }
   auto numRuns = ganeshConfigs.get<uint32_t>("num_runs");
-  auto numSteps = ganeshConfigs.get<uint32_t>("num_steps");
+  Generator generator(randomSeed);
   std::list<std::list<Set>> sampledClusters;
-  Ganesh<Data, Var, Set> ganesh(this->m_data);
   for (auto r = 0u; r < numRuns; ++r) {
     LOG_MESSAGE(info, "Run %u", r);
-    // XXX: Seeding PRNG in this way to compare the results
-    //      with Lemon-Tree; the seeding can be moved outside later
-    Generator generator(randomSeed + r);
-    ganesh.initializeRandom(generator, initClusters);
-    for (auto s = 0u; s <= numSteps; ++s) {
-      LOG_MESSAGE(info, "Step %u", s);
-      ganesh.clusterTwoWay(generator);
-    }
-    // XXX: Lemon Tree writes out only the last sampled cluster
-    // and uses that for the downstream tasks per run
-    // We can replicate this behavior by storing only the last sample in each run
-    // Further, we do not use -burn_in and -sample_steps because they do not
-    // have any effect on the outcome
-    LOG_MESSAGE(info, "Sampling");
-    const auto& primaryClusters = ganesh.primaryClusters();
-    std::list<Set> varClusters;
-    for (const auto& cluster : primaryClusters) {
-      varClusters.push_back(cluster.elements());
-    }
+    // XXX: Seeding in this way to compare the results with Lemon-Tree;
+    //      Otherwise, we can carry over generator state across runs
+    generator.seed(randomSeed + r);
+    auto varClusters = this->singleGaneshRun(generator, ganeshConfigs);
     sampledClusters.push_back(varClusters);
   }
   return sampledClusters;

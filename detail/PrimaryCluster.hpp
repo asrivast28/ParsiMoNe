@@ -24,6 +24,7 @@
 #include "SecondaryCluster.hpp"
 #include "Generator.hpp"
 
+#include "mxx/partition.hpp"
 #include "utils/Random.hpp"
 
 
@@ -75,7 +76,7 @@ public:
 
   template <typename Generator>
   void
-  clusterSecondary(Generator&, const uint32_t = 1);
+  clusterSecondary(Generator&, const mxx::comm* const, const uint32_t);
 
   const std::list<SecondaryCluster<Data, Var, Set>>&
   secondaryClusters() const;
@@ -85,12 +86,28 @@ private:
   removeEmptyClusters();
 
   template <typename Generator>
+  Var
+  chooseReassignCluster(Generator&, const Var, const double);
+
+  template <typename Generator>
+  Var
+  chooseReassignCluster(Generator&, const mxx::comm&, const Var, const double);
+
+  template <typename Generator>
   void
-  reassignSecondary(Generator&, const Var);
+  reassignSecondary(Generator&, const mxx::comm* const, const Var);
+
+  template <typename Generator>
+  Var
+  chooseMergeCluster(Generator&, const typename std::list<SecondaryCluster<Data, Var, Set>>::iterator&);
+
+  template <typename Generator>
+  Var
+  chooseMergeCluster(Generator&, const mxx::comm&, const typename std::list<SecondaryCluster<Data, Var, Set>>::iterator&);
 
   template <typename Generator>
   bool
-  mergeCluster(Generator&, typename std::list<SecondaryCluster<Data, Var, Set>>::iterator&);
+  mergeCluster(Generator&, const mxx::comm* const, typename std::list<SecondaryCluster<Data, Var, Set>>::iterator&);
 
 private:
   std::list<SecondaryCluster<Data, Var, Set>> m_cluster;
@@ -154,9 +171,9 @@ PrimaryCluster<Data, Var, Set>::PrimaryCluster(
     m_numSecondaryVars(other.m_numSecondaryVars)
 {
   // Create a copy of the secondary clusters
-  for (auto cit = other.m_cluster.begin(); cit != other.m_cluster.end(); ++cit) {
-    m_cluster.emplace_back(*cit);
-    for (const auto e : cit->elements()) {
+  for (auto cIt = other.m_cluster.begin(); cIt != other.m_cluster.end(); ++cIt) {
+    m_cluster.emplace_back(*cIt);
+    for (const auto e : cIt->elements()) {
       m_membership[e] = std::prev(m_cluster.end());
     }
   }
@@ -364,9 +381,9 @@ PrimaryCluster<Data, Var, Set>::randomSecondary(
   }
   m_cluster = std::list<SecondaryCluster<Data, Var, Set>>(cluster.begin(), cluster.end());
   this->removeEmptyClusters();
-  for (auto cit = m_cluster.begin(); cit != m_cluster.end(); ++cit) {
-    for (const auto e : cit->elements()) {
-      m_membership[e] = cit;
+  for (auto cIt = m_cluster.begin(); cIt != m_cluster.end(); ++cIt) {
+    for (const auto e : cIt->elements()) {
+      m_membership[e] = cIt;
     }
   }
   this->scoreClear();
@@ -387,6 +404,7 @@ template <typename Generator>
 void
 PrimaryCluster<Data, Var, Set>::clusterSecondary(
   Generator& generator,
+  const mxx::comm* const comm,
   const uint32_t numReps
 )
 {
@@ -396,17 +414,17 @@ PrimaryCluster<Data, Var, Set>::clusterSecondary(
     LOG_MESSAGE(info, "Reassigning secondary variables");
     for (auto i = 0u; i < m_numSecondaryVars; ++i) {
       auto v = varDistrib(generator);
-      this->reassignSecondary(generator, v);
+      this->reassignSecondary(generator, comm, v);
     }
     LOG_MESSAGE(info, "Done reassigning secondary variables");
     LOG_MESSAGE(info, "Merging secondary clusters (number of clusters = %u)", m_cluster.size());
     auto merges = 0u;
-    for (auto cit = m_cluster.begin(); (cit != m_cluster.end()) && (m_cluster.size() > 1); ++merges) {
-      if (this->mergeCluster(generator, cit)) {
-        cit = m_cluster.erase(cit);
+    for (auto cIt = m_cluster.begin(); (cIt != m_cluster.end()) && (m_cluster.size() > 1); ++merges) {
+      if (this->mergeCluster(generator, comm, cIt)) {
+        cIt = m_cluster.erase(cIt);
       }
       else {
-        ++cit;
+        ++cIt;
       }
     }
     LOG_MESSAGE_IF(merges > m_numSecondaryVars,
@@ -444,6 +462,72 @@ PrimaryCluster<Data, Var, Set>::removeEmptyClusters(
 }
 
 template <typename Data, typename Var, typename Set>
+template <typename Generator>
+Var
+PrimaryCluster<Data, Var, Set>::chooseReassignCluster(
+  Generator& generator,
+  const Var given,
+  const double singleScore
+)
+{
+  // Compute the weight of the var being in its separate cluster
+  // as well as all the existing clusters
+  std::vector<double> weight(m_cluster.size() + 1);
+  weight[0] = 1.0;
+  auto maxDiff = weight[0];
+  auto wIt = weight.begin() + 1;
+  // Only compute score diffs for existing clusters
+  for (auto cIt = m_cluster.begin(); cIt != m_cluster.end(); ++cIt, ++wIt) {
+    auto thisDiff = cIt->scoreInsertSecondary(*this, given) -
+                    (cIt->score(*this) + singleScore);
+    *wIt = thisDiff;
+    maxDiff = std::max(thisDiff, maxDiff);
+  }
+  for (auto& w : weight) {
+    w = exp(w - maxDiff);
+  }
+  // Pick a cluster using the computed weights
+  return discrete_distribution_pick<Var>(weight.cbegin(), weight.cend(), generator);
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator>
+Var
+PrimaryCluster<Data, Var, Set>::chooseReassignCluster(
+  Generator& generator,
+  const mxx::comm& comm,
+  const Var given,
+  const double singleScore
+)
+{
+  mxx::blk_dist block(m_cluster.size(), comm.size(), comm.rank());
+  // Compute the weight of the var being in its separate cluster
+  // as well as all the existing clusters
+  std::vector<double> myWeights(block.local_size() + static_cast<uint8_t>(comm.is_first()));
+  auto myMaxDiff = std::numeric_limits<double>::lowest();
+  if (comm.is_first()) {
+    myWeights[0] = 1.0;
+    myMaxDiff = 1.0;
+  }
+  auto wIt = std::next(myWeights.begin(), static_cast<uint8_t>(comm.is_first()));
+  // Only compute score diffs for existing clusters
+  auto cIt = std::next(m_cluster.begin(), block.eprefix_size());
+  for (auto c = block.eprefix_size(); c < block.iprefix_size(); ++c, ++cIt, ++wIt) {
+    auto thisDiff = cIt->scoreInsertSecondary(*this, given) -
+                    (cIt->score(*this) + singleScore);
+    *wIt = thisDiff;
+    myMaxDiff = std::max(thisDiff, myMaxDiff);
+  }
+  auto allMaxDiff = mxx::allreduce(myMaxDiff, mxx::max<double>(), comm);
+  for (auto& w : myWeights) {
+    w = exp(w - allMaxDiff);
+  }
+  auto allWeights = mxx::allgatherv(myWeights, comm);
+  // Pick a cluster using the computed weights
+  return discrete_distribution_pick<Var>(allWeights.cbegin(), allWeights.cend(), generator);
+}
+
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Moves the given secondary variable to a different
  *        secondary cluster in this primary cluster.
@@ -456,6 +540,7 @@ template <typename Generator>
 void
 PrimaryCluster<Data, Var, Set>::reassignSecondary(
   Generator& generator,
+  const mxx::comm* const comm,
   const Var given
 )
 {
@@ -476,25 +561,13 @@ PrimaryCluster<Data, Var, Set>::reassignSecondary(
     LOG_MESSAGE(debug, "Removing the old cluster of the variable");
     m_cluster.erase(oldCluster);
   }
-  // Compute the weight of the var being in its separate cluster
-  // as well as all the existing clusters
-  std::vector<double> weight(m_cluster.size() + 1);
-  weight[0] = 1.0;
-  auto wit = weight.begin() + 1;
-  auto maxDiff = weight[0];
-  auto singleScore = newCluster.score(*this);
-  // Only compute score diffs for existing clusters
-  for (auto cit = m_cluster.begin(); cit != m_cluster.end(); ++cit, ++wit) {
-    auto thisDiff = cit->scoreInsertSecondary(*this, given) -
-                    cit->score(*this) - singleScore;
-    *wit = thisDiff;
-    maxDiff = std::max(thisDiff, maxDiff);
+  auto c = m_cluster.size() + 1;
+  if ((comm == nullptr) || (comm->size() == 1)) {
+    c = this->chooseReassignCluster(generator, given, newCluster.score(*this));
   }
-  for (auto& w : weight) {
-    w = exp(w - maxDiff);
+  else {
+    c = this->chooseReassignCluster(generator, *comm, given, newCluster.score(*this));
   }
-  // Pick a cluster using the computed weights
-  auto c = discrete_distribution_pick<Var>(weight.cbegin(), weight.cend(), generator);
   if (c == 0) {
     // The variable will stay in its own cluster
     LOG_MESSAGE(info, "Secondary variable %u assigned to a newly created cluster", static_cast<uint32_t>(given));
@@ -513,6 +586,62 @@ PrimaryCluster<Data, Var, Set>::reassignSecondary(
 }
 
 template <typename Data, typename Var, typename Set>
+template <typename Generator>
+Var
+PrimaryCluster<Data, Var, Set>::chooseMergeCluster(
+  Generator& generator,
+  const typename std::list<SecondaryCluster<Data, Var, Set>>::iterator& given
+)
+{
+  // Compute the weight of merging this cluster with
+  // all the other clusters which are not empty
+  auto givenScore = given->score(*this);
+  std::vector<double> weight(m_cluster.size(), 0.0);
+  auto wIt = weight.begin();
+  for (auto cIt = m_cluster.begin(); cIt != m_cluster.end(); ++cIt, ++wIt) {
+    if (cIt != given) {
+      auto thisDiff = cIt->scoreMerge(*this, *given) -
+                      (cIt->score(*this) + givenScore);
+      *wIt = exp(thisDiff);
+    }
+    else {
+      *wIt = 1.0;
+    }
+  }
+  // Choose a cluster using the computed weights
+  return discrete_distribution_pick<Var>(weight.cbegin(), weight.cend(), generator);
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator>
+Var
+PrimaryCluster<Data, Var, Set>::chooseMergeCluster(
+  Generator& generator,
+  const mxx::comm& comm,
+  const typename std::list<SecondaryCluster<Data, Var, Set>>::iterator& given
+)
+{
+  auto givenScore = given->score(*this);
+  mxx::blk_dist block(m_cluster.size(), comm.size(), comm.rank());
+  std::vector<double> myWeights(block.local_size());
+  auto wIt = myWeights.begin();
+  auto cIt = std::next(m_cluster.begin(), block.eprefix_size());
+  for (auto c = block.eprefix_size(); c < block.iprefix_size(); ++c, ++cIt, ++wIt) {
+    if (cIt != given) {
+      auto thisDiff = cIt->scoreMerge(*this, *given) -
+                      (cIt->score(*this) + givenScore);
+      *wIt = exp(thisDiff);
+    }
+    else {
+      *wIt = 1.0;
+    }
+  }
+  auto allWeights = mxx::allgatherv(myWeights, comm);
+  // Choose a cluster using all the computed weights
+  return discrete_distribution_pick<Var>(allWeights.cbegin(), allWeights.cend(), generator);
+}
+
+template <typename Data, typename Var, typename Set>
 /**
  * @brief Merges the given secondary cluster with another secondary cluster
  *        in this primary cluster.
@@ -524,26 +653,17 @@ template <typename Generator>
 bool
 PrimaryCluster<Data, Var, Set>::mergeCluster(
   Generator& generator,
+  const mxx::comm* const comm,
   typename std::list<SecondaryCluster<Data, Var, Set>>::iterator& given
 )
 {
-  // Compute the weight of merging this cluster with
-  // all the other clusters which are not empty
-  auto givenScore = given->score(*this);
-  std::vector<double> weight(m_cluster.size(), 0.0);
-  auto wit = weight.begin();
-  for (auto cit = m_cluster.begin(); cit != m_cluster.end(); ++cit, ++wit) {
-    if (cit != given) {
-      auto thisDiff = cit->scoreMerge(*this, *given) -
-                      cit->score(*this) - givenScore;
-      *wit = exp(thisDiff);
-    }
-    else {
-      *wit = 1.0;
-    }
+  auto c = m_cluster.size();
+  if ((comm == nullptr) || (comm->size() == 1)) {
+    c = this->chooseMergeCluster(generator, given);
   }
-  // Choose a cluster using the computed weights
-  auto c = discrete_distribution_pick<Var>(weight.cbegin(), weight.cend(), generator);
+  else {
+    c = this->chooseMergeCluster(generator, *comm, given);
+  }
   auto chosen = std::next(m_cluster.begin(), c);
   if (chosen != given) {
     LOG_MESSAGE(info, "Merging given cluster with cluster %u", static_cast<uint32_t>(c));

@@ -55,6 +55,10 @@ protected:
 
 private:
   template <typename Generator>
+  std::list<Set>
+  singleGaneshRun(Generator&, const pt::ptree&) const;
+
+  template <typename Generator>
   std::list<std::list<Set>>
   clusterVarsGanesh(const pt::ptree&) const;
 
