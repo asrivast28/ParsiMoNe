@@ -81,6 +81,9 @@ public:
   const std::list<SecondaryCluster<Data, Var, Set>>&
   secondaryClusters() const;
 
+  void
+  syncSecondary(const mxx::comm&, const int);
+
 private:
   void
   removeEmptyClusters();
@@ -680,6 +683,41 @@ PrimaryCluster<Data, Var, Set>::mergeCluster(
     LOG_MESSAGE(info, "Not merging given cluster");
     return false;
   }
+}
+
+template <typename Data, typename Var, typename Set>
+void
+PrimaryCluster<Data, Var, Set>::syncSecondary(
+  const mxx::comm& comm,
+  const int source
+)
+{
+  auto numClusters = m_cluster.size();
+  mxx::bcast(numClusters, source, comm);
+  m_cluster.resize(numClusters, SecondaryCluster<Data, Var, Set>(this->m_data, m_numSecondaryVars));
+  LOG_MESSAGE(info, "Synchronizing secondary clusters from rank %d (number of clusters = %u)", source, m_cluster.size());
+  std::vector<std::reference_wrapper<Set>> allSecondary;
+  std::vector<std::tuple<double, double, double, uint64_t>> allScores(numClusters);
+  auto cIt = m_cluster.begin();
+  auto sIt = allScores.begin();
+  for (auto c = 0u; c < numClusters; ++c, ++cIt, ++sIt) {
+    allSecondary.push_back(cIt->elementsRef());
+    *sIt = cIt->scoreState(*this);
+  }
+  set_bcast(allSecondary, m_numSecondaryVars, source, comm);
+  mxx::bcast(allScores, source, comm);
+  if (comm.rank() != source) {
+    auto cIt = m_cluster.begin();
+    auto sIt = allScores.begin();
+    for (auto c = 0u; c < numClusters; ++c, ++cIt, ++sIt) {
+      cIt->scoreState(*this, *sIt);
+      for (const auto e : cIt->elements()) {
+        m_membership[e] = cIt;
+      }
+    }
+    this->scoreClear();
+  }
+  LOG_MESSAGE(info, "Done synchronizing secondary clusters");
 }
 
 #endif // DETAIL_PRIMARYCLUSTER_HPP_

@@ -97,6 +97,15 @@ public:
   double
   scoreEraseSecondary(const Cluster<Data, Var, Set>&, const Var, const bool = false);
 
+  std::reference_wrapper<Set>
+  elementsRef();
+
+  std::tuple<double, double, double, uint64_t>
+  scoreState(const Cluster<Data, Var, Set>&);
+
+  void
+  scoreState(const Cluster<Data, Var, Set>&, const std::tuple<double, double, double, uint64_t>&);
+
 private:
   void
   scoreCache(const Cluster<Data, Var, Set>&);
@@ -467,6 +476,35 @@ SecondaryCluster<Data, Var, Set>::scoreEraseSecondary(
     m_score = score;
   }
   return score;
+}
+
+template <typename Data, typename Var, typename Set>
+std::reference_wrapper<Set>
+SecondaryCluster<Data, Var, Set>::elementsRef(
+)
+{
+  return std::ref(this->m_elements);
+}
+
+template <typename Data, typename Var, typename Set>
+std::tuple<double, double, double, uint64_t>
+SecondaryCluster<Data, Var, Set>::scoreState(
+  const Cluster<Data, Var, Set>& primary
+)
+{
+  this->scoreCache(primary);
+  return std::make_tuple(m_score, m_sum, m_sum2, static_cast<uint64_t>(m_count));
+}
+
+template <typename Data, typename Var, typename Set>
+void
+SecondaryCluster<Data, Var, Set>::scoreState(
+  const Cluster<Data, Var, Set>& primary,
+  const std::tuple<double, double, double, uint64_t>& state
+)
+{
+  m_primary = primary.elements();
+  std::tie(m_score, m_sum, m_sum2, m_count) = state;
 }
 
 #endif // DETAIL_SECONDARYCLUSTER_HPP_

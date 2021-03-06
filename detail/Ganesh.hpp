@@ -516,8 +516,56 @@ Ganesh<Data, Var, Set>::clusterSecondary(
 )
 {
   LOG_MESSAGE(info, "Clustering secondary variables for all the primary clusters");
-  for (auto& cluster : m_cluster) {
-    cluster.clusterSecondary(generator, comm, numReps);
+  if ((comm != nullptr) && (comm->size() > 1) && (m_cluster.size() > 1)) {
+    auto perClusterGenerated = m_data.numObs() * numReps * 3;
+    if (static_cast<uint32_t>(comm->size()) > m_cluster.size()) {
+      LOG_MESSAGE(debug, "Clustering in parallel by splitting communicator");
+      // Split the communicator with more than one process per cluster
+      mxx::blk_dist commBlock(comm->size(), m_cluster.size(), 0);
+      auto myCluster = commBlock.rank_of(comm->rank());
+      auto clusterComm = comm->split(myCluster);
+      // Advance the generator state for previous clusters
+      advance(generator, myCluster * perClusterGenerated);
+      auto cIt = std::next(m_cluster.begin(), myCluster);
+      // First, learn secondary clusters for the local primary cluster
+      // Each process will call clusterSecondary for just one cluster
+      cIt->clusterSecondary(generator, &clusterComm, numReps);
+      // Then, synchronize secondary clusters for all the primary clusters
+      cIt = m_cluster.begin();
+      for (auto c = 0u; c < m_cluster.size(); ++c, ++cIt) {
+        // Synchronize the cluster using the first process for the
+        // cluster as the source
+        cIt->syncSecondary(*comm, commBlock.eprefix_size(c));
+      }
+      // Advance the generator state for next clusters
+      advance(generator, (m_cluster.size() - myCluster - 1) * perClusterGenerated);
+    }
+    else {
+      LOG_MESSAGE(debug, "Clustering in parallel by splitting clusters");
+      // Assign one or more clusters per process; no need to split the communicator
+      mxx::blk_dist clusterBlock(m_cluster.size(), comm->size(), comm->rank());
+      // Advance the generator state for previous clusters
+      advance(generator, clusterBlock.eprefix_size() * perClusterGenerated);
+      // First, learn secondary clusters for all the local primary clusters
+      auto cIt = std::next(m_cluster.begin(), clusterBlock.eprefix_size());
+      for (auto c = clusterBlock.eprefix_size(); c < clusterBlock.iprefix_size(); ++c, ++cIt) {
+        cIt->clusterSecondary(generator, nullptr, numReps);
+      }
+      // Advance the generator state for next clusters
+      advance(generator, (m_cluster.size() - clusterBlock.iprefix_size()) * perClusterGenerated);
+      // Then, synchronize secondary clusters for all the primary clusters
+      cIt = m_cluster.begin();
+      for (auto c = 0u; c < m_cluster.size(); ++c, ++cIt) {
+        cIt->syncSecondary(*comm, clusterBlock.rank_of(c));
+      }
+    }
+  }
+  else {
+    // There is no way to learn different secondary clusters in parallel
+    // We may compute the scores for reassignments and merges in parallel
+    for (auto& cluster : m_cluster) {
+      cluster.clusterSecondary(generator, comm, numReps);
+    }
   }
   LOG_MESSAGE(info, "Done clustering secondary variables");
 }
