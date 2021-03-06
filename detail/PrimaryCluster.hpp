@@ -22,6 +22,7 @@
 
 #include "Cluster.hpp"
 #include "SecondaryCluster.hpp"
+#include "Generator.hpp"
 
 #include "utils/Random.hpp"
 
@@ -399,7 +400,8 @@ PrimaryCluster<Data, Var, Set>::clusterSecondary(
     }
     LOG_MESSAGE(info, "Done reassigning secondary variables");
     LOG_MESSAGE(info, "Merging secondary clusters (number of clusters = %u)", m_cluster.size());
-    for (auto cit = m_cluster.begin(); (cit != m_cluster.end()) && (m_cluster.size() > 1); ) {
+    auto merges = 0u;
+    for (auto cit = m_cluster.begin(); (cit != m_cluster.end()) && (m_cluster.size() > 1); ++merges) {
       if (this->mergeCluster(generator, cit)) {
         cit = m_cluster.erase(cit);
       }
@@ -407,6 +409,11 @@ PrimaryCluster<Data, Var, Set>::clusterSecondary(
         ++cit;
       }
     }
+    LOG_MESSAGE_IF(merges > m_numSecondaryVars,
+                   error, "More merges than secondary vars (%u > %u)", merges, m_numSecondaryVars);
+    // Always advance generator state to maximum number of possible merges
+    // to keep the generator state predictable
+    advance(generator, m_numSecondaryVars - merges);
     LOG_MESSAGE(info, "Done merging secondary clusters (number of clusters = %u)", m_cluster.size());
   }
   this->scoreClear();

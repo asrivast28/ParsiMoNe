@@ -24,7 +24,6 @@
 #include "Ganesh.hpp"
 #include "Module.hpp"
 #include "ConsensusCluster.hpp"
-#include "Generator.hpp"
 
 #include "mxx/partition.hpp"
 
