@@ -302,29 +302,14 @@ LemonTree<Data, Var, Set>::learnModulesParents(
 template <typename Data, typename Var, typename Set>
 template <typename Generator>
 void
-LemonTree<Data, Var, Set>::learnModulesParents_parallel(
+LemonTree<Data, Var, Set>::learnModulesParents_nodes(
   std::list<Module<Data, Var, Set>>& modules,
   Generator& generator,
-  const pt::ptree& modulesConfigs
+  const Set&& candidateParents,
+  const double betaMax,
+  const uint32_t numSplits
 ) const
 {
-  auto regFile = modulesConfigs.get<std::string>("reg_file");
-  auto betaMax = modulesConfigs.get<double>("beta_reg");
-  auto numSplits = modulesConfigs.get<uint32_t>("num_reg");
-  Set candidateParents(this->m_data.numVars());
-  if (!regFile.empty()) {
-    if (this->m_comm.is_first()) {
-      // Read candidate parents from the given file
-      this->readCandidateParents(regFile, candidateParents);
-    }
-    set_bcast(candidateParents, 0, this->m_comm);
-  }
-  else {
-    // Add all the variables as candidate parents
-    for (Var v = 0u; v < candidateParents.max(); ++v) {
-      candidateParents.insert(v);
-    }
-  }
   OptimalBeta ob(0.0, betaMax, 1e-5);
   std::vector<uint32_t> moduleNodeCount(modules.size());
   std::vector<uint32_t> moduleNodeWeights;
@@ -402,6 +387,35 @@ LemonTree<Data, Var, Set>::learnModulesParents_parallel(
   LOG_MESSAGE(info, "Done synchronizing module parents");
   this->m_comm.barrier();
   TIMER_PAUSE(m_tSync);
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator>
+void
+LemonTree<Data, Var, Set>::learnModulesParents_parallel(
+  std::list<Module<Data, Var, Set>>& modules,
+  Generator& generator,
+  const pt::ptree& modulesConfigs
+) const
+{
+  auto regFile = modulesConfigs.get<std::string>("reg_file");
+  auto betaMax = modulesConfigs.get<double>("beta_reg");
+  auto numSplits = modulesConfigs.get<uint32_t>("num_reg");
+  Set candidateParents(this->m_data.numVars());
+  if (!regFile.empty()) {
+    if (this->m_comm.is_first()) {
+      // Read candidate parents from the given file
+      this->readCandidateParents(regFile, candidateParents);
+    }
+    set_bcast(candidateParents, 0, this->m_comm);
+  }
+  else {
+    // Add all the variables as candidate parents
+    for (Var v = 0u; v < candidateParents.max(); ++v) {
+      candidateParents.insert(v);
+    }
+  }
+  this->learnModulesParents_nodes(modules, generator, std::move(candidateParents), betaMax, numSplits);
 }
 
 template <typename Data, typename Var, typename Set>
