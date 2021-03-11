@@ -327,38 +327,56 @@ LemonTree<Data, Var, Set>::learnModulesParents_parallel(
   }
   OptimalBeta ob(0.0, betaMax, 1e-5);
   std::vector<uint32_t> moduleNodeCount(modules.size());
+  std::vector<uint32_t> moduleNodeWeights;
   auto totalNodes = 0u;
   auto moduleCit = modules.cbegin();
   for (auto m = 0u; m < modules.size(); ++m, ++moduleCit) {
     moduleNodeCount[m] = moduleCit->nodeCount();
+    auto nodeWeights = moduleCit->nodeWeights();
+    moduleNodeWeights.insert(moduleNodeWeights.end(), nodeWeights.begin(), nodeWeights.end());
     totalNodes += moduleNodeCount[m];
   }
   std::vector<uint32_t> moduleNodeCountPrefix(moduleNodeCount.size());
   std::partial_sum(moduleNodeCount.cbegin(), moduleNodeCount.cend(), moduleNodeCountPrefix.begin());
-  mxx::blk_dist block(totalNodes, this->m_comm.size(), this->m_comm.rank());
+  std::vector<uint32_t> moduleNodeWeightsPrefix(moduleNodeWeights.size());
+  std::partial_sum(moduleNodeWeights.cbegin(), moduleNodeWeights.cend(), moduleNodeWeightsPrefix.begin());
+  auto totalWeight = moduleNodeWeightsPrefix.back();
+  mxx::blk_dist block(totalWeight, this->m_comm.size(), this->m_comm.rank());
+  auto myFirstNode = std::distance(moduleNodeWeightsPrefix.cbegin(),
+                                   std::lower_bound(moduleNodeWeightsPrefix.cbegin(),
+                                                    moduleNodeWeightsPrefix.cend(),
+                                                    block.eprefix_size()));
+  if (!this->m_comm.is_first()) {
+    myFirstNode += 1;
+  }
+  auto myLastNode = std::distance(moduleNodeWeightsPrefix.cbegin(),
+                                  std::lower_bound(moduleNodeWeightsPrefix.cbegin(),
+                                                   moduleNodeWeightsPrefix.cend(),
+                                                   block.iprefix_size())) + 1;
+  auto myNodeCount = myLastNode - myFirstNode;
   // First, advance the PRNG state to account for the number of
   // random generations for nodes on the previous ranks
-  advance(generator, block.eprefix_size() * 2 * numSplits);
+  advance(generator, myFirstNode * 2 * numSplits);
   // XXX: We need to track the validity of nodes because some nodes may not learn any splits
   //      and that information will be required for synchornization later
-  std::vector<uint8_t> myValidNodes(block.local_size());
-  std::vector<std::tuple<Var, Var, double>> myNodeSplits(block.local_size() * 2 * numSplits);
+  std::vector<uint8_t> myValidNodes(myNodeCount);
+  std::vector<std::tuple<Var, Var, double>> myNodeSplits(myNodeCount * 2 * numSplits);
   // Find the indices for the modules which contain the first and last node on this rank
-  auto myFirst = std::distance(moduleNodeCountPrefix.cbegin(),
-                               std::lower_bound(moduleNodeCountPrefix.cbegin(),
-                                                moduleNodeCountPrefix.cend(),
-                                                block.eprefix_size() + 1));
-  auto myLast = std::distance(moduleNodeCountPrefix.cbegin(),
-                              std::lower_bound(moduleNodeCountPrefix.cbegin(),
-                                               moduleNodeCountPrefix.cend(),
-                                               block.iprefix_size()));
-  auto moduleIt = std::next(modules.begin(), myFirst);
+  auto myFirstModule = std::distance(moduleNodeCountPrefix.cbegin(),
+                                     std::lower_bound(moduleNodeCountPrefix.cbegin(),
+                                                      moduleNodeCountPrefix.cend(),
+                                                      myFirstNode + 1));
+  auto myLastModule = std::distance(moduleNodeCountPrefix.cbegin(),
+                                    std::lower_bound(moduleNodeCountPrefix.cbegin(),
+                                                     moduleNodeCountPrefix.cend(),
+                                                     myLastNode));
+  auto moduleIt = std::next(modules.begin(), myFirstModule);
   auto validIt = myValidNodes.begin();
   auto splitIt = myNodeSplits.begin();
-  auto prevNodeCount = block.eprefix_size();
-  for (auto m = myFirst; m <= myLast; ++m, ++moduleIt) {
+  auto prevNodeCount = myFirstNode;
+  for (auto m = myFirstModule; m <= myLastModule; ++m, ++moduleIt) {
     auto firstNode = prevNodeCount - (moduleNodeCountPrefix[m] - moduleNodeCount[m]);
-    auto numNodes = std::min(static_cast<uint32_t>(block.iprefix_size()), moduleNodeCountPrefix[m]) - prevNodeCount;
+    auto numNodes = std::min(static_cast<uint32_t>(myLastNode), moduleNodeCountPrefix[m]) - prevNodeCount;
     if (numNodes > 0) {
       LOG_MESSAGE(info, "Module %u: Learning parents for %u nodes (starting node index = %u)", m, numNodes, firstNode);
       moduleIt->learnParents(generator, candidateParents, ob, numSplits, firstNode, numNodes, validIt, splitIt);

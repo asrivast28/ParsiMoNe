@@ -37,6 +37,9 @@ public:
   uint32_t
   nodeCount() const;
 
+  std::vector<uint32_t>
+  nodeWeights() const;
+
   template <typename Generator>
   void
   learnParents(Generator&, const Set&, const OptimalBeta&, const uint32_t);
@@ -171,6 +174,22 @@ Module<Data, Var, Set>::nodeCount(
     count += tree->nodeCount();
   }
   return count;
+}
+
+template <typename Data, typename Var, typename Set>
+std::vector<uint32_t>
+Module<Data, Var, Set>::nodeWeights(
+) const
+{
+  std::vector<uint32_t> weights(this->nodeCount());
+  auto wIt = weights.begin();
+  for (auto& tree : m_trees) {
+    for (auto* node : tree->nodes()) {
+      *wIt = node->observations().size();
+      ++wIt;
+    }
+  }
+  return weights;
 }
 
 template <typename Data, typename Var, typename Set>
