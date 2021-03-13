@@ -25,6 +25,8 @@
 #include "Module.hpp"
 #include "ConsensusCluster.hpp"
 
+#include "mxx/distribution.hpp"
+
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 
@@ -344,7 +346,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_nodes(
   advance(generator, myFirstNode * 2 * numSplits);
   // XXX: We need to track the validity of nodes because some nodes may not learn any splits
   //      and that information will be required for synchornization later
-  std::vector<uint8_t> myValidNodes(myNodeCount);
+  std::vector<uint8_t> myValidNodes(myNodeCount, 0);
   std::vector<std::tuple<Var, Var, double>> myNodeSplits(myNodeCount * 2 * numSplits);
   // Find the indices for the modules which contain the first and last node on this rank
   auto myFirstModule = std::distance(moduleNodeCountPrefix.cbegin(),
@@ -392,6 +394,245 @@ LemonTree<Data, Var, Set>::learnModulesParents_nodes(
 template <typename Data, typename Var, typename Set>
 template <typename Generator>
 void
+LemonTree<Data, Var, Set>::learnModulesParents_splits(
+  std::list<Module<Data, Var, Set>>& modules,
+  Generator& generator,
+  const Set&& candidateParents,
+  const double betaMax,
+  const uint32_t numSplits
+) const
+{
+  TIMER_DECLARE(tCandidates);
+  OptimalBeta ob(0.0, betaMax, 1e-5);
+  std::vector<uint32_t> moduleNodeCount(modules.size());
+  std::vector<uint64_t> moduleMaxSplits(modules.size());
+  auto moduleCit = modules.cbegin();
+  for (auto m = 0u; m < modules.size(); ++m, ++moduleCit) {
+    moduleNodeCount[m] = moduleCit->nodeCount();
+    moduleMaxSplits[m] = moduleCit->maxSplits(candidateParents);
+  }
+  std::vector<uint64_t> moduleNodeCountPrefix(moduleNodeCount.size());
+  std::partial_sum(moduleNodeCount.cbegin(), moduleNodeCount.cend(), moduleNodeCountPrefix.begin());
+  std::vector<uint64_t> moduleMaxSplitsPrefix(moduleMaxSplits.size());
+  std::partial_sum(moduleMaxSplits.cbegin(), moduleMaxSplits.cend(), moduleMaxSplitsPrefix.begin());
+  auto totalSplits = moduleMaxSplitsPrefix.back();
+  mxx::blk_dist block(totalSplits, this->m_comm.size(), this->m_comm.rank());
+  auto myFirstModule = std::distance(moduleMaxSplitsPrefix.cbegin(),
+                                     std::lower_bound(moduleMaxSplitsPrefix.cbegin(),
+                                                      moduleMaxSplitsPrefix.cend(),
+                                                      block.eprefix_size() + 1));
+  auto myLastModule = std::distance(moduleMaxSplitsPrefix.cbegin(),
+                                    std::lower_bound(moduleMaxSplitsPrefix.cbegin(),
+                                                     moduleMaxSplitsPrefix.cend(),
+                                                     block.iprefix_size()));
+  std::vector<std::tuple<uint32_t, Var, Var, double>> mySplits;
+  auto moduleIt = std::next(modules.begin(), myFirstModule);
+  auto prevSplits = block.eprefix_size();
+  for (auto m = myFirstModule; m <= myLastModule; ++m, ++moduleIt) {
+    LOG_MESSAGE(info, "Module %u: Learning candidate parents splits", m);
+    auto firstNode = moduleNodeCountPrefix[m] - moduleNodeCount[m];
+    auto firstSplit = prevSplits - (moduleMaxSplitsPrefix[m] - moduleMaxSplits[m]);
+    auto maxSplits = std::min(block.iprefix_size(), moduleMaxSplitsPrefix[m]) - prevSplits;
+    if (maxSplits > 0) {
+      moduleIt->candidateParentsSplits(mySplits, candidateParents, ob, firstNode, firstSplit, maxSplits);
+      prevSplits += maxSplits;
+    }
+  }
+  // Redistribute to get the same number of candidate splits on every processor
+  mxx::stable_distribute_inplace(mySplits, this->m_comm);
+  this->m_comm.barrier();
+  if (this->m_comm.is_first()) {
+    TIMER_ELAPSED("Time taken in learning candidate splits: ", tCandidates);
+  }
+  TIMER_DECLARE(tChoose);
+  // Compute the max score for each node across all the processors
+  std::vector<double> mySplitsScoresMax(moduleNodeCountPrefix.back(), std::numeric_limits<double>::lowest());
+  std::for_each(mySplits.cbegin(), mySplits.cend(),
+                [&mySplitsScoresMax] (const std::tuple<uint32_t, Var, Var, double>& split)
+                                     { mySplitsScoresMax[std::get<0>(split)] = std::max(mySplitsScoresMax[std::get<0>(split)],
+                                                                                        std::get<3>(split)); });
+  auto allSplitsScoresMax = mxx::allreduce(mySplitsScoresMax, mxx::max<double>(), this->m_comm);
+  // Set of local node indices
+  // XXX: Using set instead of unordered_set because we want sorted indices
+  std::set<uint32_t> myNodeIdx;
+  // Count of node splits on this processor for all the nodes
+  std::vector<uint64_t> mySplitsCounts(moduleNodeCountPrefix.back(), 0);
+  // Vector of <node, weight> for each split, where weight = exp(score)
+  std::vector<std::pair<uint32_t, double>> mySplitsWeights(mySplits.size());
+  // Sum of weights of splits on this processor for all the nodes
+  std::vector<double> mySplitsWeightsSum(moduleNodeCountPrefix.back(), 0);
+  auto s = 0u;
+  auto splitFirst = mySplits.cbegin();
+  while (splitFirst != mySplits.cend()) {
+    auto n = std::get<0>(*splitFirst);
+    myNodeIdx.insert(n);
+    auto splitLast = std::find_if(splitFirst, mySplits.cend(),
+                                  [&n] (const std::tuple<uint32_t, Var, Var, double>& split)
+                                       { return std::get<0>(split) != n; });
+    mySplitsCounts[n] += std::distance(splitFirst, splitLast);
+    auto nodeMaxScore = allSplitsScoresMax[n];
+    for (auto it = splitFirst; it != splitLast; ++it, ++s) {
+      auto weight = exp(std::get<3>(*it) - nodeMaxScore);
+      mySplitsWeights[s] = std::make_pair(n, weight);
+      mySplitsWeightsSum[n] += weight;
+    }
+    splitFirst = splitLast;
+  }
+  // Get the count of splits of the first node on previous processor(s)
+  auto myLastNode = std::get<0>(mySplits.back());
+  auto lastSplitsCount = std::make_pair(myLastNode, mySplitsCounts[myLastNode]);
+  auto addSplitsCount = [] (const std::pair<uint32_t, uint64_t>& a,
+                            const std::pair<uint32_t, uint64_t>& b)
+                           { return (a.first == b.first) ?
+                                    std::make_pair(b.first, a.second + b.second) : b; };
+  auto firstCountsPrefix = mxx::exscan(lastSplitsCount, addSplitsCount, this->m_comm, false);
+  // Get the total count of splits for all the nodes
+  // Also get the sum of the weights of splits for each node on all the processors
+  // XXX: We really only need these for the nodes on this processor
+  //      Can we make it more efficient?
+  auto allSplitsCounts = mxx::allreduce(mySplitsCounts, this->m_comm);
+  auto allSplitsWeightsSum = mxx::allreduce(mySplitsWeightsSum, this->m_comm);
+  // First, handle any nodes with infinite weights
+  static auto findInf = [] (const double w) { return std::isinf(w); };
+  auto infWeightIt = std::find_if(allSplitsWeightsSum.begin(), allSplitsWeightsSum.end(), findInf);
+  while (infWeightIt != allSplitsWeightsSum.end()) {
+    // We have found that the total weight of all the splits for this node is infinite.
+    // Therefore, we want to modify the weights to replicate the following
+    // sequential behaviors of discrete_distribution_safe/std::discrete_distribution
+    // 1) If one or more of the split weights are infinite,
+    //    then always pick the first split with infinite weight
+    // 2) If none of the split weights are infinite,
+    //    then always pick the last split
+    auto n = std::distance(allSplitsWeightsSum.begin(), infWeightIt);
+    if (myNodeIdx.find(n) != myNodeIdx.end()) {
+      LOG_MESSAGE(debug, "Node %u: Handling infinite weights", n);
+      static auto nodeSplit = [&n] (const std::pair<uint32_t, double>& split)
+                                   { return split.first == n; };
+      auto splitIt = std::find_if(mySplitsWeights.begin(), mySplitsWeights.end(), nodeSplit);
+      while (splitIt->first == n) {
+        // Set all infinite split weights to 1.0 and the finite weights to 0.0
+        // This will accomplish the two requirements described above
+        splitIt->second = std::isinf(splitIt->second) ? 1.0 : 0.0;
+        ++splitIt;
+      }
+    }
+    // Set the total weight for this node to 1.0
+    *infWeightIt = 1.0;
+    infWeightIt = std::find_if(std::next(infWeightIt), allSplitsWeightsSum.end(), findInf);
+  }
+  // Then, normalize the weights for all the local splits
+  auto normalizeWeight = [&allSplitsWeightsSum] (std::pair<uint32_t, double>& split)
+                                                { split.second /= allSplitsWeightsSum[split.first]; };
+  std::for_each(mySplitsWeights.begin(), mySplitsWeights.end(), normalizeWeight);
+  // Perform a segmented parallel prefix on this vector of <node, normalized weight>
+  // with node defining the segment boundaries
+  // This will compute the prefix sum of the normalized split weights belonging to every node
+  std::vector<std::pair<uint32_t, double>> mySplitsWeightsPrefix(mySplitsWeights.size());
+  auto addSplitsWeights = [] (const std::pair<uint32_t, double>& a,
+                              const std::pair<uint32_t, double>& b)
+                             { return (a.first == b.first) ?
+                                      std::make_pair(b.first, a.second + b.second) : b; };
+  mxx::global_scan(mySplitsWeights.begin(), mySplitsWeights.end(),
+                   mySplitsWeightsPrefix.begin(), addSplitsWeights, false, this->m_comm);
+  // Now, we can get the splits for the nodes on this processor
+  std::uniform_real_distribution<double> randDist(0.0, 1.0);
+  auto first = 0u;
+  std::vector<std::tuple<uint32_t, Var, Var, double>> myChosenSplits(myNodeIdx.size() * 2 * numSplits);
+  auto chosenIt = myChosenSplits.begin();
+  auto g = 0u;
+  for (const auto n : myNodeIdx) {
+    if (n > g) {
+      // Advance the PRNG state to account for the previous nodes
+      advance(generator, (n - g) * 2 * numSplits);
+      g = n;
+    }
+    ++g;
+    auto nodeSplitsCount = mySplitsCounts[n];
+    auto nodeSplitsCountsPrefix = (firstCountsPrefix.first == n) ? firstCountsPrefix.second : 0u;
+    auto last = first + nodeSplitsCount - 1;
+    auto nodeWeightLower = mySplitsWeightsPrefix[first].second - mySplitsWeights[first].second;
+    // There may be some cases in which the last split for a node may
+    // not have a cumulative weight of 1.0, because of the following reasons:
+    // 1) If all the split weights were finite, but the sum of the weights was infinite
+    // 2) Due to eccentricities of floating point arithmetic
+    // In such cases, set it to 1.0
+    if ((nodeSplitsCountsPrefix + nodeSplitsCount == allSplitsCounts[n]) &&
+        std::isless(mySplitsWeightsPrefix[last].second, 1.0)) {
+      mySplitsWeightsPrefix[last].second = 1.0;
+    }
+    auto nodeWeightUpper = mySplitsWeightsPrefix[last].second;
+    std::uniform_int_distribution<uint64_t> indexDist(0, allSplitsCounts[n] - 1);
+    LOG_MESSAGE(debug, "Node %u: Choosing the splits", n);
+    for (auto i = 0u; i < numSplits; ++i) {
+      // Pick a split weighted by its score
+      auto rand = randDist(generator);
+      // Check if the split is local to this processor
+      if (std::isgreater(rand, nodeWeightLower) &&
+          std::islessequal(rand, nodeWeightUpper)) {
+        auto firstSplit = std::next(mySplitsWeightsPrefix.begin(), first);
+        auto lastSplit = std::next(firstSplit, nodeSplitsCount);
+        auto foundSplit = std::lower_bound(firstSplit, lastSplit, std::make_pair(n, rand));
+        auto foundIdx = std::distance(firstSplit, foundSplit);
+        auto weightSplit = mySplits[first + foundIdx];
+        LOG_MESSAGE(debug, "Chosen parent split using weights: (%s, %g)",
+                           this->m_data.varName(std::get<1>(weightSplit)),
+                           this->m_data(std::get<1>(weightSplit), std::get<2>(weightSplit)));
+        // Index the split with the split index for sorting all the splits for this node later
+        *chosenIt = std::make_tuple(i, std::get<1>(weightSplit),
+                                    std::get<2>(weightSplit), std::get<3>(weightSplit));
+        ++chosenIt;
+      }
+      else {
+        LOG_MESSAGE(debug, "Split for weight %g not in the range [%g, %g)", rand, nodeWeightLower, nodeWeightUpper);
+      }
+      // Pick a split uniformly at random
+      auto randomIdx = indexDist(generator);
+      // Check if the split index is local to this processor
+      if ((randomIdx >= nodeSplitsCountsPrefix) &&
+          (randomIdx < (nodeSplitsCountsPrefix + nodeSplitsCount))) {
+        auto randomSplit = mySplits[first + (randomIdx - nodeSplitsCountsPrefix)];
+        LOG_MESSAGE(debug, "Chosen parent split at random: (%s, %g)",
+                           this->m_data.varName(std::get<1>(randomSplit)),
+                           this->m_data(std::get<1>(randomSplit), std::get<2>(randomSplit)));
+        // Index the split with the split index for sorting all the splits for this node later
+        // Random splits are ordered after all the weight splits
+        *chosenIt = std::make_tuple(numSplits + i, std::get<1>(randomSplit),
+                                    std::get<2>(randomSplit), std::get<3>(randomSplit));
+        ++chosenIt;
+      }
+      else {
+        LOG_MESSAGE(debug, "Random split with index %u not on this processor", randomIdx);
+      }
+    }
+    first += nodeSplitsCount;
+  }
+  myChosenSplits.resize(std::distance(myChosenSplits.begin(), chosenIt));
+  this->m_comm.barrier();
+  if (this->m_comm.is_first()) {
+    TIMER_ELAPSED("Time taken in choosing splits: ", tChoose);
+  }
+  TIMER_START(m_tSync);
+  // Gather all the chosen splits on all the processors
+  // in order to assign them to the corresponding nodes
+  // XXX: We can assign the splits for different nodes on different processors
+  //      but we are trying to maintain the same state on every processor
+  auto allChosenSplits = mxx::allgatherv(myChosenSplits, this->m_comm);
+  moduleIt = modules.begin();
+  auto countCit = allSplitsCounts.cbegin();
+  auto splitIt = allChosenSplits.begin();
+  for (auto m = 0u; m < modules.size(); ++m, ++moduleIt) {
+    // Synchronize the node parents for this module
+    LOG_MESSAGE(info, "Module %u: Synchronizing parents for all nodes", m);
+    moduleIt->syncParents(numSplits, countCit, splitIt);
+  }
+  LOG_MESSAGE(info, "Done synchronizing module parents");
+  this->m_comm.barrier();
+  TIMER_PAUSE(m_tSync);
+}
+
+template <typename Data, typename Var, typename Set>
+template <typename Generator>
+void
 LemonTree<Data, Var, Set>::learnModulesParents_parallel(
   std::list<Module<Data, Var, Set>>& modules,
   Generator& generator,
@@ -415,7 +656,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_parallel(
       candidateParents.insert(v);
     }
   }
-  this->learnModulesParents_nodes(modules, generator, std::move(candidateParents), betaMax, numSplits);
+  this->learnModulesParents_splits(modules, generator, std::move(candidateParents), betaMax, numSplits);
 }
 
 template <typename Data, typename Var, typename Set>

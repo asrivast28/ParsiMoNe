@@ -77,8 +77,8 @@ private:
       max = m_factor * max;
       f2 = assmt.evaluate(sv, sign, max);
     }
-    LOG_MESSAGE_IF(!found, warning, "Unable to initialize beta for split (%s, %g)",
-                                    assmt.varName(), sv);
+    LOG_MESSAGE_IF(!found, trace, "Unable to initialize beta for split (%s, %g)",
+                                  assmt.varName(), sv);
     return found;
   }
 
@@ -166,6 +166,12 @@ public:
 
   void
   prune(const double);
+
+  uint64_t
+  maxSplits(const Set&) const;
+
+  std::list<std::tuple<Var, Var, double>>
+  candidateParentsSplits(const Set&, const OptimalBeta&, const uint64_t, const uint64_t) const;
 
   template <typename Generator>
   bool
@@ -397,6 +403,15 @@ TreeNode<Data, Var, Set>::logPartSum(
 }
 
 template <typename Data, typename Var, typename Set>
+uint64_t
+TreeNode<Data, Var, Set>::maxSplits(
+  const Set& candidateParents
+) const
+{
+  return candidateParents.size() * m_observations.size();
+}
+
+template <typename Data, typename Var, typename Set>
 std::vector<std::tuple<Var, Var, double>>
 TreeNode<Data, Var, Set>::candidateParentsSplits(
   const Set& candidateParents,
@@ -426,6 +441,48 @@ TreeNode<Data, Var, Set>::candidateParentsSplits(
     }
   }
   return std::vector<std::tuple<Var, Var, double>>(splits.begin(), splits.end());
+}
+
+template <typename Data, typename Var, typename Set>
+std::list<std::tuple<Var, Var, double>>
+TreeNode<Data, Var, Set>::candidateParentsSplits(
+  const Set& candidateParents,
+  const OptimalBeta& ob,
+  const uint64_t firstSplit,
+  const uint64_t maxSplits
+) const
+{
+  std::list<std::tuple<Var, Var, double>> splits;
+  auto firstParent = firstSplit / m_observations.size();
+  auto lastParent = (firstSplit + maxSplits - 1) / m_observations.size();
+  auto pIt = std::next(candidateParents.begin(), firstParent);
+  auto prevSplits = firstSplit;
+  for (auto p = firstParent; p <= lastParent; ++p, ++pIt) {
+    Assignment<Data, Var, Set> assmt(m_data, *pIt, this);
+    auto firstObservation = prevSplits % m_observations.size();
+    auto numObservations = std::min(m_observations.size() - firstObservation, firstSplit + maxSplits - prevSplits);
+    auto oIt = std::next(m_observations.begin(), firstObservation);
+    for (auto o = firstObservation; o < firstObservation + numObservations; ++o, ++oIt) {
+      auto sv = m_data(*pIt, *oIt);
+      if (!std::isnan(sv)) {
+        LOG_MESSAGE(trace, "Considering split (%s, %g)", m_data.varName(*pIt), sv);
+        auto sign = assmt.sign(sv);
+        if (sign == 0) {
+          LOG_MESSAGE(trace, "Split sign is zero. Skipping");
+          continue;
+        }
+        auto beta = ob.find(assmt, sv, sign);
+        if (std::isnan(beta)) {
+          continue;
+        }
+        auto score = assmt.score(sv, sign, beta);
+        LOG_MESSAGE(trace, "Parent split details for (%s, %g) : beta=%g, score=%g", m_data.varName(*pIt), sv, beta, score);
+        splits.push_back(std::make_tuple(*pIt, *oIt, score));
+      }
+    }
+    prevSplits += numObservations;
+  }
+  return splits;
 }
 
 template <typename Data, typename Var, typename Set>

@@ -92,6 +92,10 @@ private:
 
   template <typename Generator>
   void
+  learnModulesParents_splits(std::list<Module<Data, Var, Set>>&, Generator&, const Set&&, const double, const uint32_t) const;
+
+  template <typename Generator>
+  void
   learnModulesParents_parallel(std::list<Module<Data, Var, Set>>&, Generator&, const pt::ptree&) const;
 
   template <typename Generator>

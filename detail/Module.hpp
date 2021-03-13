@@ -40,6 +40,12 @@ public:
   std::vector<uint32_t>
   nodeWeights() const;
 
+  uint32_t
+  maxSplits(const Set&) const;
+
+  void
+  candidateParentsSplits(std::vector<std::tuple<uint32_t, Var, Var, double>>&, const Set&, const OptimalBeta&, const uint32_t, const uint64_t, const uint64_t) const;
+
   template <typename Generator>
   void
   learnParents(Generator&, const Set&, const OptimalBeta&, const uint32_t);
@@ -68,6 +74,12 @@ private:
 
   void
   updateParentsWeights(const TreeNode<Data, Var, Set>* const);
+
+  void
+  setSplitsUpdateWeights(TreeNode<Data, Var, Set>* const, const uint32_t, const typename std::vector<std::tuple<Var, Var, double>>::const_iterator&);
+
+  void
+  setSplitsUpdateWeights(TreeNode<Data, Var, Set>* const, const uint32_t, const typename std::vector<std::tuple<uint32_t, Var, Var, double>>::iterator&);
 
 private:
   std::list<std::shared_ptr<TreeNode<Data, Var, Set>>> m_trees;
@@ -193,6 +205,62 @@ Module<Data, Var, Set>::nodeWeights(
 }
 
 template <typename Data, typename Var, typename Set>
+uint32_t
+Module<Data, Var, Set>::maxSplits(
+  const Set& candidateParents
+) const
+{
+  auto maxSplits = 0u;
+  for (auto& tree : m_trees) {
+    for (auto* node : tree->nodes()) {
+      maxSplits += node->maxSplits(candidateParents);
+    }
+  }
+  return maxSplits;
+}
+
+template <typename Data, typename Var, typename Set>
+void
+Module<Data, Var, Set>::candidateParentsSplits(
+  std::vector<std::tuple<uint32_t, Var, Var, double>>& candidateSplits,
+  const Set& candidateParents,
+  const OptimalBeta& ob,
+  const uint32_t firstNode,
+  const uint64_t firstSplit,
+  const uint64_t maxSplits
+) const
+{
+  std::list<std::tuple<uint32_t, Var, Var, double>> learnedSplits;
+  auto nodeIndex = firstNode;
+  auto prevSplits = 0u;
+  for (auto& tree : m_trees) {
+    for (auto* node : tree->nodes()) {
+      auto nodeMaxSplits = node->maxSplits(candidateParents);
+      if ((prevSplits + nodeMaxSplits) >= firstSplit) {
+        LOG_MESSAGE(debug, "Node %u: Learning candidate splits", nodeIndex);
+        auto nodeFirstSplit = (firstSplit >= prevSplits) ? (firstSplit - prevSplits) : 0u;
+        auto nodeNumSplits = std::min(nodeMaxSplits, firstSplit + maxSplits - prevSplits) - nodeFirstSplit;
+        auto nodeSplits = node->candidateParentsSplits(candidateParents, ob, nodeFirstSplit, nodeNumSplits);
+        auto addNodeIndex = [&nodeIndex] (const std::tuple<Var, Var, double>& split)
+                                         { return std::tuple_cat(std::tie(nodeIndex), split); };
+        auto prevCandidatesSize = candidateSplits.size();
+        candidateSplits.resize(prevCandidatesSize + nodeSplits.size());
+        auto candidateIt = std::next(candidateSplits.begin(), prevCandidatesSize);
+        std::transform(nodeSplits.begin(), nodeSplits.end(), candidateIt, addNodeIndex);
+        prevSplits += (nodeFirstSplit + nodeNumSplits);
+        if (prevSplits == (firstSplit + maxSplits)) {
+          return;
+        }
+      }
+      else {
+        prevSplits += nodeMaxSplits;
+      }
+      ++nodeIndex;
+    }
+  }
+}
+
+template <typename Data, typename Var, typename Set>
 void
 Module<Data, Var, Set>::updateParentsWeights(
   const TreeNode<Data, Var, Set>* const node
@@ -271,13 +339,50 @@ Module<Data, Var, Set>::learnParents(
         *validIt = 1;
         std::advance(splitIt, 2 * numSplits);
       }
-      else {
-        *validIt = 0;
-      }
       ++validIt;
     }
     firstNode = 0;
   }
+}
+
+template <typename Data, typename Var, typename Set>
+void
+Module<Data, Var, Set>::setSplitsUpdateWeights(
+  TreeNode<Data, Var, Set>* const node,
+  const uint32_t numSplits,
+  const typename std::vector<std::tuple<Var, Var, double>>::const_iterator& splitCit
+)
+{
+  auto first = splitCit;
+  auto last = std::next(first, numSplits);
+  node->setWeightSplits(first, last);
+  first = last;
+  last = std::next(first, numSplits);
+  node->setRandomSplits(first, last);
+  this->updateParentsWeights(node);
+}
+
+template <typename Data, typename Var, typename Set>
+void
+Module<Data, Var, Set>::setSplitsUpdateWeights(
+  TreeNode<Data, Var, Set>* const node,
+  const uint32_t numSplits,
+  const typename std::vector<std::tuple<uint32_t, Var, Var, double>>::iterator& splitIt
+)
+{
+  auto first = splitIt;
+  auto last = std::next(splitIt, 2 * numSplits);
+  // Sort the tuples first
+  // This will arrange the tuples in the order of their first element, i.e., the indices
+  std::sort(splitIt, last);
+  // Now, discard the index of the tuples
+  std::vector<std::tuple<Var, Var, double>> transformed(2 * numSplits);
+  std::transform(first, last, transformed.begin(),
+                 [] (const std::tuple<uint32_t, Var, Var, double>& split)
+                    { return std::make_tuple(std::get<1>(split),
+                                             std::get<2>(split),
+                                             std::get<3>(split)); });
+  this->setSplitsUpdateWeights(node, numSplits, transformed.cbegin());
 }
 
 template <typename Data, typename Var, typename Set>
@@ -291,14 +396,9 @@ Module<Data, Var, Set>::syncParents(
 {
   for (auto& tree : m_trees) {
     for (auto* node : tree->nodes()) {
-      if (*validIt == 1) {
-        auto last = std::next(splitIt, numSplits);
-        node->setWeightSplits(splitIt, last);
-        splitIt = last;
-        last = std::next(splitIt, numSplits);
-        node->setRandomSplits(splitIt, last);
-        splitIt = last;
-        this->updateParentsWeights(node);
+      if (*validIt != 0) {
+        this->setSplitsUpdateWeights(node, numSplits, splitIt);
+        std::advance(splitIt, 2 * numSplits);
       }
       else {
         node->makeLeaf();
