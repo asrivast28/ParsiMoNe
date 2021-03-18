@@ -56,7 +56,7 @@ protected:
 private:
   template <typename Generator>
   std::list<Set>
-  singleGaneshRun(Generator&, const pt::ptree&) const;
+  singleGaneshRun(Generator&, const pt::ptree&, const mxx::comm&) const;
 
   template <typename Generator>
   std::list<std::list<Set>>

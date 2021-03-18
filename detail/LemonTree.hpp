@@ -65,7 +65,8 @@ template <typename Generator>
 std::list<Set>
 LemonTree<Data, Var, Set>::singleGaneshRun(
   Generator& generator,
-  const pt::ptree& ganeshConfigs
+  const pt::ptree& ganeshConfigs,
+  const mxx::comm& comm
 ) const
 {
   auto numSteps = ganeshConfigs.get<uint32_t>("num_steps");
@@ -77,7 +78,7 @@ LemonTree<Data, Var, Set>::singleGaneshRun(
   ganesh.initializeRandom(generator, initClusters);
   for (auto s = 0u; s <= numSteps; ++s) {
     LOG_MESSAGE(info, "Step %u", s);
-    ganesh.clusterTwoWay(generator, this->m_comm);
+    ganesh.clusterTwoWay(generator, comm);
   }
   // XXX: Lemon Tree writes out only the last sampled cluster
   // and uses that for the downstream tasks per run
@@ -102,15 +103,39 @@ LemonTree<Data, Var, Set>::clusterVarsGanesh(
 {
   auto randomSeed = ganeshConfigs.get<uint32_t>("seed");
   auto numRuns = ganeshConfigs.get<uint32_t>("num_runs");
-  Generator generator(randomSeed);
+  Generator generator;
   std::list<std::list<Set>> sampledClusters;
-  for (auto r = 0u; r < numRuns; ++r) {
-    LOG_MESSAGE(info, "Run %u", r);
-    // XXX: Seeding in this way to compare the results with Lemon-Tree;
-    //      Otherwise, we can carry over generator state across runs
-    generator.seed(randomSeed + r);
-    auto varClusters = this->singleGaneshRun(generator, ganeshConfigs);
-    sampledClusters.push_back(varClusters);
+  if ((numRuns > 1) && (static_cast<uint32_t>(this->m_comm.size()) >= numRuns)) {
+    // Split the communicator with one or more processes per run
+    mxx::blk_dist commBlock(this->m_comm.size(), numRuns, 0);
+    auto myRun = commBlock.rank_of(this->m_comm.rank());
+    LOG_MESSAGE(info, "Run %u", myRun);
+    auto runComm = this->m_comm.split(myRun);
+    generator.seed(randomSeed + myRun);
+    sampledClusters.resize(numRuns);
+    auto myClusterIt = std::next(sampledClusters.begin(), myRun);
+    *myClusterIt = this->singleGaneshRun(generator, ganeshConfigs, runComm);
+    auto r = 0u;
+    for (auto& cluster : sampledClusters) {
+      auto clusterSize = cluster.size();
+      mxx::bcast(clusterSize, commBlock.eprefix_size(r), this->m_comm);
+      cluster.resize(clusterSize);
+      std::vector<std::reference_wrapper<Set>> clusterRefs;
+      std::transform(cluster.begin(), cluster.end(), std::back_inserter(clusterRefs),
+                     [] (Set& c) { return std::ref(c); });
+      set_bcast(clusterRefs, this->m_data.numVars(), commBlock.eprefix_size(r), this->m_comm);
+      ++r;
+    }
+  }
+  else {
+    for (auto r = 0u; r < numRuns; ++r) {
+      LOG_MESSAGE(info, "Run %u", r);
+      // XXX: Seeding in this way to compare the results with Lemon-Tree;
+      //      Otherwise, we can carry over generator state across runs
+      generator.seed(randomSeed + r);
+      auto varClusters = this->singleGaneshRun(generator, ganeshConfigs, this->m_comm);
+      sampledClusters.push_back(varClusters);
+    }
   }
   return sampledClusters;
 }
