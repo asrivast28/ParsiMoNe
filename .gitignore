@@ -1,0 +1,7 @@
+/builds/
+/datasets/
+/mnets*
+/.sconsign.dblite
+/.sconf_temp/
+/config.log
+*.un~

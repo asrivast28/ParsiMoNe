@@ -1,0 +1,9 @@
+[submodule "utils"]
+	path = utils
+	url = git@github.com:asrivast28/cpp-utils.git
+[submodule "mxx"]
+	path = mxx
+	url = git@github.com:patflick/mxx.git
+[submodule "common"]
+	path = common
+	url = git@github.com:asrivast28/bn-utils.git
