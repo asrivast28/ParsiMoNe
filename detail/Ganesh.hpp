@@ -241,7 +241,8 @@ Ganesh<Data, Var, Set>::chooseReassignCluster(
     w = exp(w - maxDiff);
   }
   // Pick a cluster using the computed weights
-  return discrete_distribution_pick<Var>(weight.cbegin(), weight.cend(), generator);
+  auto distrib = discrete_distribution_safe<Var>(weight.cbegin(), weight.cend());
+  return distrib(generator);
 }
 
 template <typename Data, typename Var, typename Set>
@@ -278,7 +279,8 @@ Ganesh<Data, Var, Set>::chooseReassignCluster(
   }
   auto allWeights = mxx::allgatherv(myWeights, comm);
   // Pick a cluster using the computed weights
-  return discrete_distribution_pick<Var>(allWeights.cbegin(), allWeights.cend(), generator);
+  auto distrib = discrete_distribution_safe<Var>(allWeights.cbegin(), allWeights.cend());
+  return distrib(generator);
 }
 
 template <typename Data, typename Var, typename Set>
@@ -369,7 +371,8 @@ Ganesh<Data, Var, Set>::chooseMergeCluster(
     }
   }
   // Choose a cluster using the computed weights
-  return discrete_distribution_pick<Var>(weight.cbegin(), weight.cend(), generator);
+  auto distrib = discrete_distribution_safe<Var>(weight.cbegin(), weight.cend());
+  return distrib(generator);
 }
 
 template <typename Data, typename Var, typename Set>
@@ -398,7 +401,8 @@ Ganesh<Data, Var, Set>::chooseMergeCluster(
   }
   auto allWeights = mxx::allgatherv(myWeights, comm);
   // Choose a cluster using all the computed weights
-  return discrete_distribution_pick<Var>(allWeights.cbegin(), allWeights.cend(), generator);
+  auto distrib = discrete_distribution_safe<Var>(allWeights.cbegin(), allWeights.cend());
+  return distrib(generator);
 }
 
 template <typename Data, typename Var, typename Set>
