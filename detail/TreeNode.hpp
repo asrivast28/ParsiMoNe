@@ -447,12 +447,17 @@ TreeNode<Data, Var, Set>::chooseSplits(
     return false;
   }
   LOG_MESSAGE(debug, "Number of candidate splits found: %u", candidateSplits.size());
+  auto maxScoreSplit = std::max_element(candidateSplits.cbegin(), candidateSplits.cend(),
+                                        [] (const std::tuple<Var, Var, double>& a,
+                                            const std::tuple<Var, Var, double>& b)
+                                           { return std::isless(std::get<2>(a), std::get<2>(b)); });
+  auto maxScore = std::get<2>(*maxScoreSplit);
   std::vector<double> weights(candidateSplits.size());
-  std::transform(candidateSplits.begin(), candidateSplits.end(), weights.begin(),
-                 [] (const std::tuple<Var, Var, double>& s)
-                    { return exp(std::get<2>(s)); });
-  std::discrete_distribution<uint32_t> splitWeight(weights.begin(), weights.end());
-  std::uniform_int_distribution<uint32_t> splitRand(0, candidateSplits.size() - 1);
+  std::transform(candidateSplits.cbegin(), candidateSplits.cend(), weights.begin(),
+                 [&maxScore] (const std::tuple<Var, Var, double>& s)
+                             { return exp(std::get<2>(s) - maxScore); });
+  discrete_distribution_safe<uint64_t> splitWeight(weights.cbegin(), weights.cend());
+  std::uniform_int_distribution<uint64_t> splitRand(0, candidateSplits.size() - 1);
   for (auto i = 0u; i < numSplits; ++i, ++weightIt, ++randomIt) {
     auto w = splitWeight(generator);
     *weightIt = candidateSplits[w];
