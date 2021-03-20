@@ -20,7 +20,7 @@
 #ifndef DETAIL_MODULENETWORKLEARNING_HPP_
 #define DETAIL_MODULENETWORKLEARNING_HPP_
 
-#include "SetUtils.hpp"
+#include "common/SetUtils.hpp"
 
 
 NotImplementedError::NotImplementedError(

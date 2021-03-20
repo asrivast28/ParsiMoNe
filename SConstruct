@@ -20,7 +20,6 @@ import os
 import platform
 
 topDir = os.path.abspath(os.getcwd())
-commonDir = os.path.join(topDir, 'common')
 cpp = None
 buildDir = None
 targetSuffix = ''
@@ -28,7 +27,6 @@ targetSuffix = ''
 
 cppPaths = [
             topDir,
-            commonDir,
             ]
 
 cppFlags = [

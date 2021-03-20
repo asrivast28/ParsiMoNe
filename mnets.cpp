@@ -18,13 +18,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "DataReader.hpp"
 #include "RawData.hpp"
 #include "Genomica.hpp"
 #include "LemonTree.hpp"
 #include "ProgramOptions.hpp"
-#include "UintSet.hpp"
 
+#include "common/DataReader.hpp"
+#include "common/UintSet.hpp"
 #include "mxx/env.hpp"
 #include "utils/Logging.hpp"
 #include "utils/Timer.hpp"

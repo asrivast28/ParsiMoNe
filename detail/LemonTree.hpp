@@ -27,6 +27,7 @@
 
 #include "mxx/distribution.hpp"
 
+#include <boost/filesystem.hpp>
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 
