@@ -130,7 +130,7 @@ learnNetwork(
   algo->learnNetwork((comm.size() > 1) || options.forceParallel(), configs, options.outputDir());
   comm.barrier();
   if (comm.is_first()) {
-    TIMER_ELAPSED("Time taken in learning the network: ", tNetwork);
+    TIMER_ELAPSED("Time taken in getting the network: ", tNetwork);
   }
 }
 
