@@ -434,7 +434,7 @@ PrimaryCluster<Data, Var, Set>::clusterSecondary(
                    error, "More merges than secondary vars (%u > %u)", merges, m_numSecondaryVars);
     // Always advance generator state to maximum number of possible merges
     // to keep the generator state predictable
-    advance(generator, m_numSecondaryVars - merges);
+    ::advance(generator, m_numSecondaryVars - merges);
     LOG_MESSAGE(info, "Done merging secondary clusters (number of clusters = %u)", m_cluster.size());
   }
   this->scoreClear();

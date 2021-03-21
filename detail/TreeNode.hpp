@@ -499,7 +499,7 @@ TreeNode<Data, Var, Set>::chooseSplits(
   if (candidateSplits.empty()) {
     // Move generator state forward to simulate picking
     // 2 * numSplits splits
-    advance(generator, 2 * numSplits);
+    ::advance(generator, 2 * numSplits);
     LOG_MESSAGE(debug, "No candidate splits found");
     return false;
   }

@@ -529,7 +529,7 @@ Ganesh<Data, Var, Set>::clusterSecondary(
       auto myCluster = commBlock.rank_of(comm->rank());
       auto clusterComm = comm->split(myCluster);
       // Advance the generator state for previous clusters
-      advance(generator, myCluster * perClusterGenerated);
+      ::advance(generator, myCluster * perClusterGenerated);
       auto cIt = std::next(m_cluster.begin(), myCluster);
       // First, learn secondary clusters for the local primary cluster
       // Each process will call clusterSecondary for just one cluster
@@ -542,21 +542,21 @@ Ganesh<Data, Var, Set>::clusterSecondary(
         cIt->syncSecondary(*comm, commBlock.eprefix_size(c));
       }
       // Advance the generator state for next clusters
-      advance(generator, (m_cluster.size() - myCluster - 1) * perClusterGenerated);
+      ::advance(generator, (m_cluster.size() - myCluster - 1) * perClusterGenerated);
     }
     else {
       LOG_MESSAGE(debug, "Clustering in parallel by splitting clusters");
       // Assign one or more clusters per process; no need to split the communicator
       mxx::blk_dist clusterBlock(m_cluster.size(), comm->size(), comm->rank());
       // Advance the generator state for previous clusters
-      advance(generator, clusterBlock.eprefix_size() * perClusterGenerated);
+      ::advance(generator, clusterBlock.eprefix_size() * perClusterGenerated);
       // First, learn secondary clusters for all the local primary clusters
       auto cIt = std::next(m_cluster.begin(), clusterBlock.eprefix_size());
       for (auto c = clusterBlock.eprefix_size(); c < clusterBlock.iprefix_size(); ++c, ++cIt) {
         cIt->clusterSecondary(generator, nullptr, numReps);
       }
       // Advance the generator state for next clusters
-      advance(generator, (m_cluster.size() - clusterBlock.iprefix_size()) * perClusterGenerated);
+      ::advance(generator, (m_cluster.size() - clusterBlock.iprefix_size()) * perClusterGenerated);
       // Then, synchronize secondary clusters for all the primary clusters
       cIt = m_cluster.begin();
       for (auto c = 0u; c < m_cluster.size(); ++c, ++cIt) {

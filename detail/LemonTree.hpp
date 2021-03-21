@@ -373,7 +373,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_nodes(
   auto myNodeCount = myLastNode - myFirstNode;
   // First, advance the PRNG state to account for the number of
   // random generations for nodes on the previous ranks
-  advance(generator, myFirstNode * 2 * numSplits);
+  ::advance(generator, myFirstNode * 2 * numSplits);
   // XXX: We need to track the validity of nodes because some nodes may not learn any splits
   //      and that information will be required for synchornization later
   std::vector<uint8_t> myValidNodes(myNodeCount, 0);
@@ -573,7 +573,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_splits(
   for (const auto n : myNodeIdx) {
     if (n > g) {
       // Advance the PRNG state to account for the previous nodes
-      advance(generator, (n - g) * 2 * numSplits);
+      ::advance(generator, (n - g) * 2 * numSplits);
       g = n;
     }
     ++g;
