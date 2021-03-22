@@ -259,28 +259,21 @@ Ganesh<Data, Var, Set>::chooseReassignCluster(
   // Compute the weight of the var being in its separate cluster
   // as well as all the existing clusters
   std::vector<double> myWeights(block.local_size() + static_cast<uint8_t>(comm.is_first()));
-  auto myMaxDiff = std::numeric_limits<double>::lowest();
+  auto wIt = myWeights.begin();
+  auto myMaxWeight = std::numeric_limits<double>::lowest();
   if (comm.is_first()) {
-    myWeights[0] = 1.0;
-    myMaxDiff = 1.0;
+    *wIt = 1.0;
+    myMaxWeight = 1.0;
+    ++wIt;
   }
-  auto wIt = std::next(myWeights.begin(), static_cast<uint8_t>(comm.is_first()));
   // Only compute score diffs for existing clusters
-  auto cIt = std::next(m_cluster.begin(), block.eprefix_size());
-  for (auto c = block.eprefix_size(); c < block.iprefix_size(); ++c, ++cIt, ++wIt) {
+  for (auto cIt = std::next(m_cluster.begin(), block.eprefix_size()); wIt != myWeights.end(); ++cIt, ++wIt) {
     auto thisDiff = cIt->scoreInsertPrimary(given) -
                     (cIt->score() + singleScore);
     *wIt = thisDiff;
-    myMaxDiff = std::max(thisDiff, myMaxDiff);
+    myMaxWeight = std::max(thisDiff, myMaxWeight);
   }
-  auto allMaxDiff = mxx::allreduce(myMaxDiff, mxx::max<double>(), comm);
-  for (auto& w : myWeights) {
-    w = exp(w - allMaxDiff);
-  }
-  auto allWeights = mxx::allgatherv(myWeights, comm);
-  // Pick a cluster using the computed weights
-  auto distrib = discrete_distribution_safe<Var>(allWeights.cbegin(), allWeights.cend());
-  return distrib(generator);
+  return distributed_weighted_choose<Var>(generator, comm, std::move(block), std::move(myWeights), myMaxWeight, true);
 }
 
 template <typename Data, typename Var, typename Set>
@@ -386,23 +379,17 @@ Ganesh<Data, Var, Set>::chooseMergeCluster(
 {
   auto givenScore = given->score();
   mxx::blk_dist block(m_cluster.size(), comm.size(), comm.rank());
-  std::vector<double> myWeights(block.local_size());
+  std::vector<double> myWeights(block.local_size(), 0.0);
   auto wIt = myWeights.begin();
   auto cIt = std::next(m_cluster.begin(), block.eprefix_size());
   for (auto c = block.eprefix_size(); c < block.iprefix_size(); ++c, ++cIt, ++wIt) {
     if (cIt != given) {
       PrimaryCluster<Data, Var, Set> merged(*given, *cIt);
       auto thisDiff = merged.score() - (cIt->score() + givenScore);
-      *wIt = exp(thisDiff);
-    }
-    else {
-      *wIt = 1.0;
+      *wIt = thisDiff;
     }
   }
-  auto allWeights = mxx::allgatherv(myWeights, comm);
-  // Choose a cluster using all the computed weights
-  auto distrib = discrete_distribution_safe<Var>(allWeights.cbegin(), allWeights.cend());
-  return distrib(generator);
+  return distributed_weighted_choose<Var>(generator, comm, std::move(block), std::move(myWeights));
 }
 
 template <typename Data, typename Var, typename Set>
