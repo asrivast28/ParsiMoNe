@@ -565,7 +565,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_splits(
   mxx::global_scan(mySplitsWeights.begin(), mySplitsWeights.end(),
                    mySplitsWeightsPrefix.begin(), addSplitsWeights, false, this->m_comm);
   // Now, we can get the splits for the nodes on this processor
-  std::uniform_real_distribution<double> randDist(0.0, 1.0);
+  trng::uniform01_dist<double> randDist;
   auto first = 0u;
   std::vector<std::tuple<uint32_t, Var, Var, double>> myChosenSplits(myNodeIdx.size() * 2 * numSplits);
   auto chosenIt = myChosenSplits.begin();
@@ -591,7 +591,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_splits(
       mySplitsWeightsPrefix[last].second = 1.0;
     }
     auto nodeWeightUpper = mySplitsWeightsPrefix[last].second;
-    std::uniform_int_distribution<uint64_t> indexDist(0, allSplitsCounts[n] - 1);
+    trng::uniform_int_dist indexDist(0, allSplitsCounts[n]);
     LOG_MESSAGE(debug, "Node %u: Choosing the splits", n);
     for (auto i = 0u; i < numSplits; ++i) {
       // Pick a split weighted by its score
@@ -616,7 +616,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_splits(
         LOG_MESSAGE(debug, "Split for weight %g not in the range [%g, %g)", rand, nodeWeightLower, nodeWeightUpper);
       }
       // Pick a split uniformly at random
-      auto randomIdx = indexDist(generator);
+      auto randomIdx = static_cast<uint64_t>(indexDist(generator));
       // Check if the split index is local to this processor
       if ((randomIdx >= nodeSplitsCountsPrefix) &&
           (randomIdx < (nodeSplitsCountsPrefix + nodeSplitsCount))) {

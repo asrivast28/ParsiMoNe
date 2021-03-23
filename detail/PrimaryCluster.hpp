@@ -22,10 +22,12 @@
 
 #include "Cluster.hpp"
 #include "SecondaryCluster.hpp"
-#include "Generator.hpp"
+#include "Random.hpp"
 
 #include "mxx/partition.hpp"
-#include "utils/Random.hpp"
+
+#include <trng/uniform01_dist.hpp>
+#include <trng/uniform_int_dist.hpp>
 
 
 /**
@@ -377,7 +379,7 @@ PrimaryCluster<Data, Var, Set>::randomSecondary(
 {
   LOG_MESSAGE(info, "Randomly assigning secondary variables to %u clusters", static_cast<uint32_t>(numClusters));
   std::vector<SecondaryCluster<Data, Var, Set>> cluster(numClusters, SecondaryCluster<Data, Var, Set>(this->m_data, m_numSecondaryVars));
-  std::uniform_int_distribution<Var> clusterDistrib(0, numClusters - 1);
+  trng::uniform_int_dist clusterDistrib(0, numClusters);
   for (Var e = 0u; e < m_numSecondaryVars; ++e) {
     auto c = clusterDistrib(generator);
     cluster[c].insert(e);
@@ -411,12 +413,12 @@ PrimaryCluster<Data, Var, Set>::clusterSecondary(
   const uint32_t numReps
 )
 {
-  std::uniform_int_distribution<Var> varDistrib(0, m_numSecondaryVars - 1);
+  trng::uniform_int_dist varDistrib(0, m_numSecondaryVars);
   for (auto r = 0u; r < numReps; ++r) {
     // Reassign a random secondary variable for n iterations
     LOG_MESSAGE(info, "Reassigning secondary variables");
     for (auto i = 0u; i < m_numSecondaryVars; ++i) {
-      auto v = varDistrib(generator);
+      auto v = static_cast<Var>(varDistrib(generator));
       this->reassignSecondary(generator, comm, v);
     }
     LOG_MESSAGE(info, "Done reassigning secondary variables");

@@ -161,7 +161,7 @@ Ganesh<Data, Var, Set>::initializeRandom(
   const auto m = m_data.numObs();
   LOG_MESSAGE(info, "Randomly assigning primary variables to %u clusters", static_cast<uint32_t>(numPrimary));
   std::vector<PrimaryCluster<Data, Var, Set>> cluster(numPrimary, PrimaryCluster<Data, Var, Set>(m_data, n, m));
-  std::uniform_int_distribution<Var> clusterDistrib(0, numPrimary - 1);
+  trng::uniform_int_dist clusterDistrib(0, numPrimary);
   for (Var e = 0; e < n; ++e) {
     // Pick a cluster uniformly at random
     auto c = clusterDistrib(generator);
@@ -460,11 +460,11 @@ Ganesh<Data, Var, Set>::clusterPrimary(
 )
 {
   const auto n = m_data.numVars();
-  std::uniform_int_distribution<Var> varDistrib(0, n - 1);
+  trng::uniform_int_dist varDistrib(0, n);
   // Reassign a random variable for n iterations
   LOG_MESSAGE(info, "Reassigning primary variables");
   for (auto i = 0u; i < n; ++i) {
-    auto v = varDistrib(generator);
+    auto v = static_cast<Var>(varDistrib(generator));
     this->reassignPrimary(generator, comm, v);
   }
   LOG_MESSAGE(info, "Done reassigning primary variables");

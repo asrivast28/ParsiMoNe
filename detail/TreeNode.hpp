@@ -21,7 +21,9 @@
 #define DETAIL_TREENODE_HPP_
 
 #include "Assignment.hpp"
-#include "Generator.hpp"
+#include "Random.hpp"
+
+#include <trng/uniform_int_dist.hpp>
 
 
 class OptimalBeta {
@@ -514,7 +516,7 @@ TreeNode<Data, Var, Set>::chooseSplits(
                  [&maxScore] (const std::tuple<Var, Var, double>& s)
                              { return exp(std::get<2>(s) - maxScore); });
   discrete_distribution_safe<uint64_t> splitWeight(weights.cbegin(), weights.cend());
-  std::uniform_int_distribution<uint64_t> splitRand(0, candidateSplits.size() - 1);
+  trng::uniform_int_dist splitRand(0, candidateSplits.size());
   for (auto i = 0u; i < numSplits; ++i, ++weightIt, ++randomIt) {
     auto w = splitWeight(generator);
     *weightIt = candidateSplits[w];
