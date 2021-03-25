@@ -18,7 +18,7 @@
 # limitations under the License.
 Import('env')
 
-targetName = 'mnets'
+targetName = 'parsimone'
 
 boostLibs = [
              'boost_program_options',
@@ -36,7 +36,7 @@ trngLib = [
 
 srcFiles = [
             'ProgramOptions.cpp',
-            'mnets.cpp',
+            'parsimone.cpp',
             ]
 
 built = False

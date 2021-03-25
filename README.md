@@ -25,7 +25,7 @@ _Tested with version [3.1.2](https://scons.org/doc/3.1.2/HTML/scons-user.html)._
 After the dependencies have been installed, the project can be built as:  
 <pre><code>scons
 </code></pre>  
-This will create an executable named `mnets`, which can be used for constraint-based structure learning.  
+This will create an executable named `parsimone`, which can be used for constraint-based structure learning.  
 By default, all the paths from the environment in `CPATH` and `LIBRARY_PATH` variables are used as include paths and library paths.  
 Path to external includes and libraries at non-default locations can also be specified as:  
 <pre><code>scons LOCALINCLUDES=&lt;comma-delimited list of paths&gt; LOCALLIBS=&lt;comma-delimited list of paths&gt;
@@ -35,7 +35,7 @@ Path to external includes and libraries at non-default locations can also be spe
 For building the debug version of the executable, the following can be executed:
 <pre><code>scons DEBUG=1
 </code></pre>  
-Debug version of the executable is named `mnets_debug`.
+Debug version of the executable is named `parsimone_debug`.
 
 #### Logging
 By default, logging is disabled in the release build and enabled in the debug build.
@@ -49,10 +49,10 @@ Timing of high-level operations can be enabled by passing `TIMER=1` argument to 
 
 ## Execution
 Once the project has been built, please execute the following for more information on all the options that the executable accepts:
-<pre><code>./mnets --help
+<pre><code>./parsimone --help
 </code></pre>
 For running in parallel, the following can be executed:
-<pre><code> mpirun -np 8 ./mnets <...>
+<pre><code> mpirun -np 8 ./parsimone ...
 </code></pre>  
 
 

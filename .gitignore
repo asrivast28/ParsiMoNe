@@ -1,6 +1,6 @@
 /builds/
 /datasets/
-/mnets*
+/parsimone*
 /.sconsign.dblite
 /.sconf_temp/
 /config.log

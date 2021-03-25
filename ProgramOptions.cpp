@@ -27,7 +27,7 @@
 namespace fs = boost::filesystem;
 
 ProgramOptions::ProgramOptions(
-) : m_desc("Module Network Learning"),
+) : m_desc("Parallel Construction of Module Networks"),
     m_logLevel(),
     m_logFile(),
     m_dataFile(),

@@ -1,6 +1,6 @@
 /**
- * @file mnets.cpp
- * @brief The implementation of the main function for mnets,
+ * @file parsimone.cpp
+ * @brief The implementation of the main function for ParsiMoNe,
  *        and other functions that drive the program execution.
  * @author Ankit Srivastava <asrivast@gatech.edu>
  *
