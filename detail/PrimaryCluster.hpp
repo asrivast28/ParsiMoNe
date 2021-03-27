@@ -79,6 +79,9 @@ distributed_weighted_choose(
   auto allWeightsSum = mxx::allreduce(myWeightsSum, comm);
   std::for_each(myWeights.begin(), myWeights.end(),
                 [&allWeightsSum] (double& w){ w /= allWeightsSum; });
+  if (std::isinf(allWeightsSum)) {
+    return 0;
+  }
   mxx::global_scan_inplace(myWeights, comm);
   auto foundIt = std::upper_bound(myWeights.cbegin(), myWeights.cend(), rand);
   auto chosen = totalSize;
