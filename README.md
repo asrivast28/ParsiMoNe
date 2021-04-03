@@ -55,9 +55,11 @@ For running in parallel, the following can be executed:
 <pre><code> mpirun -np 8 ./parsimone ...
 </code></pre>  
 
-
 ## Algorithms
-The algorithm for learning module network can be chosen by specifying the desired algorithm as an option to the executable, using `-a` option.
+Currently, the only supported algorithm for learning module networks is `lemontree` that corresponds to the algorithm by [Bonnet et al](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003983) originally implemented in [_Lemon-Tree_](https://github.com/erbon7/lemon-tree).
+
+## Publication
+_Currently under double-blind review._
 
 ## Licensing
 Our code is licensed under the Apache License 2.0 (see [`LICENSE`](LICENSE)).
