@@ -1,0 +1,718 @@
+LMOD_SYSHOST=coda
+CPLUS_INCLUDE_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/include:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/include
+LMOD_FAMILY_COMPILER_VERSION=10.1.0
+__LMOD_REF_COUNT_XDG_DATA_DIRS=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/pango-1.41.0-lh2tv2rfpgvbo66lahbq4rwntzzmex7q/share:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/gobject-introspection-1.56.1-3qm3ocmwjmrj5seeqn2lcsi4olxjnxco/share:1;/storage/home/hcoda1/9/USER/.local/share/flatpak/exports/share:1;/var/lib/flatpak/exports/share:1;/usr/local/share:1;/usr/share:1
+_ModuleTable011_=Mi8yLjMuMy1rNzZwZWtoIix9LFsic3lzdGVtQmFzZU1QQVRIIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZTovdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL3NwYWNrL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZSIsfQ==
+MANPATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/share/man:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/share/man:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/man:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/share/man:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/share/man:/usr/local/pace-apps/lmod/lmod/share/man:/opt/torque/current/share/man:/opt/moab/current/share/man::
+ANACONDA3_ROOT=/usr/local/pace-apps/manual/packages/anaconda3/2020.02
+HOSTNAME=atl1-1-02-010-19-l.pace.gatech.edu
+_ModuleTable003_=bHVhIixbImZ1bGxOYW1lIl09ImdjYy8xMC4xLjAiLFsibG9hZE9yZGVyIl09Myxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJnY2MvMTAuMS4wIix9LFsiZ2NjLzEwLjEuMC9hcm1hZGlsbG8iXT17WyJmbiJdPSIvc3RvcmFnZS9ob21lL2hjb2RhMS85L2Fzcml2YXN0YXZhNjQvZGF0YS9zcGFjay9zaGFyZS9zcGFjay9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9tdmFwaWNoMi8yLjMuMy1rNzZwZWtoL2djYy8xMC4xLjAvYXJtYWRpbGxvLzkuODAwLjMtNWt0amp4ai5sdWEiLFsiZnVsbE5hbWUiXT0iZ2NjLzEwLjEuMC9hcm1hZGlsbG8vOS44MDAuMy01a3RqanhqIixbImxvYWRPcmRlciJdPTYscHJvcFQ9e30sWyJz
+SPACK_ROOT=/storage/home/hcoda1/9/USER/data/spack
+PBS_VERSION=TORQUE-6.1.3
+_ModuleTable009_=MjdvaCIsfSx4YWx0PXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS94YWx0LzIuOC40Lmx1YSIsWyJmdWxsTmFtZSJdPSJ4YWx0LzIuOC40IixbImxvYWRPcmRlciJdPTEscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MSxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ieGFsdCIsfSx9LG1wYXRoQT17Ii9zdG9yYWdlL2NvZGExL3Atc2FsdXJ1OC8wL2Fzcml2YXN0YXZhNjQvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvbXZhcGljaDIvMi4zLjMtb3d5YjMycC9nY2MvMTAuMS4wIiwiL3Vzci9sb2NhbC9wYWNlLWFwcHMvbW9kdWxlcy9zcGFj
+SHELL=/bin/bash
+TERM=xterm-256color
+__LMOD_REF_COUNT_MODULEPATH=/storage/coda1/p-saluru8/0/USER/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-owyb32p/gcc/10.1.0:1;/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/gcc/10.1.0:1;/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core:1;/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/Core:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-k76pekh:1
+MPICC=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/bin/mpicc
+HISTSIZE=1000
+LMOD_ROOT=/usr/local/pace-apps/lmod
+__LMOD_REF_COUNT_SINGULARITY_BINDPATH=/usr/local/pace-apps/manual/packages/xalt:1
+PBS_JOBNAME=STDIN
+TMPDIR=/scratch/1461311.sched-torque.pace.gatech.edu
+LMOD_SYSTEM_DEFAULT_MODULES=pace/2020.01
+PACE_ROOT=/usr/local/pace-apps/manual/packages/pace
+XALT_EXECUTABLE_TRACKING=yes
+PERL5LIB=/usr/lib/oracle/11.2/client64/lib64/perl5/
+LMOD_PACKAGE_PATH=/usr/local/pace-apps/lmod/site
+LIBRARY_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/lib:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/rlib/R/lib:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/lib64:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/lib64:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/lib64:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/lib:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/lib:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/lib64:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/lib
+PACE_MPI_VERSION=mvapich2-2.3.3-owyb32p
+__LMOD_STACK_CXX=aWNwYw==
+PACE_FAMILY_MPI=mvapich2
+CONDA_SHLVL=0
+__LMOD_REF_COUNT_COMPILER_PATH=/usr/local/pace-apps/manual/packages/xalt/2.8.4/bin:1
+LD_PRELOAD=/usr/local/pace-apps/manual/packages/xalt/2.8.4/lib64/libxalt_init.so
+PBS_ENVIRONMENT=PBS_INTERACTIVE
+LMOD_PKG=/usr/local/pace-apps/lmod/8.3.1
+SINGULARITYENV_LD_PRELOAD=/usr/local/pace-apps/manual/packages/xalt/2.8.4/lib64/libxalt_init.so
+__LMOD_REF_COUNT_C_INCLUDE_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/include:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/include:1
+__LMOD_REF_COUNT_GI_TYPELIB_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/pango-1.41.0-lh2tv2rfpgvbo66lahbq4rwntzzmex7q/lib/girepository-1.0:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/gobject-introspection-1.56.1-3qm3ocmwjmrj5seeqn2lcsi4olxjnxco/lib/girepository-1.0:1
+LMOD_VERSION=8.3.1
+PBS_O_WORKDIR=/storage/home/hcoda1/9/USER/Author-Kit
+__LMOD_REF_COUNT_CMAKE_PREFIX_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq:1
+__LMOD_REF_COUNT_LOADEDMODULES=xalt/2.8.4:1;pace/2020.01:1;gcc/10.1.0:1;mvapich2/2.3.3-owyb32p:1;boost/1.74.0-rykd3ms:1;gcc/10.1.0/armadillo/9.800.3-5ktjjxj:1;trng/4.22-e3d27oh:1;scons/3.1.2-os63cz6:1;googletest/1.10.0-esfb62p:1;anaconda3/2020.02:1;r/4.0.2-fgar2pn:1;hpctoolkit/2020.08.03-sbqfylw:1
+__LMOD_STACK_FC=aWZvcnQ=
+_ModuleTable007_=MSIsfSxyPXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvci80LjAuMi1mZ2FyMnBuLmx1YSIsWyJmdWxsTmFtZSJdPSJyLzQuMC4yLWZnYXIycG4iLFsibG9hZE9yZGVyIl09MTEscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ici80LjAuMi1mZ2FyMnBuIix9LHNjb25zPXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvc2NvbnMvMy4xLjItb3M2
+QT_GRAPHICSSYSTEM_CHECKED=1
+TORQUEHOMEDIR=/opt/torque/current/
+__LMOD_STACK_CC=aWNj
+PACE_FAMILY_MPI_VERSION=2.3.3-owyb32p
+USER=USER
+PBS_TASKNUM=1
+PACE_FAMILY_COMPILER_VERSION=10.1.0
+LS_COLORS=rs=0:di=38;5;27:ln=38;5;51:mh=44;38;5;15:pi=40;38;5;11:so=38;5;13:do=38;5;5:bd=48;5;232;38;5;11:cd=48;5;232;38;5;3:or=48;5;232;38;5;9:mi=05;48;5;232;38;5;15:su=48;5;196;38;5;15:sg=48;5;11;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;21;38;5;15:ex=38;5;34:*.tar=38;5;9:*.tgz=38;5;9:*.arc=38;5;9:*.arj=38;5;9:*.taz=38;5;9:*.lha=38;5;9:*.lz4=38;5;9:*.lzh=38;5;9:*.lzma=38;5;9:*.tlz=38;5;9:*.txz=38;5;9:*.tzo=38;5;9:*.t7z=38;5;9:*.zip=38;5;9:*.z=38;5;9:*.Z=38;5;9:*.dz=38;5;9:*.gz=38;5;9:*.lrz=38;5;9:*.lz=38;5;9:*.lzo=38;5;9:*.xz=38;5;9:*.bz2=38;5;9:*.bz=38;5;9:*.tbz=38;5;9:*.tbz2=38;5;9:*.tz=38;5;9:*.deb=38;5;9:*.rpm=38;5;9:*.jar=38;5;9:*.war=38;5;9:*.ear=38;5;9:*.sar=38;5;9:*.rar=38;5;9:*.alz=38;5;9:*.ace=38;5;9:*.zoo=38;5;9:*.cpio=38;5;9:*.7z=38;5;9:*.rz=38;5;9:*.cab=38;5;9:*.jpg=38;5;13:*.jpeg=38;5;13:*.gif=38;5;13:*.bmp=38;5;13:*.pbm=38;5;13:*.pgm=38;5;13:*.ppm=38;5;13:*.tga=38;5;13:*.xbm=38;5;13:*.xpm=38;5;13:*.tif=38;5;13:*.tiff=38;5;13:*.png=38;5;13:*.svg=38;5;13:*.svgz=38;5;13:*.mng=38;5;13:*.pcx=38;5;13:*.mov=38;5;13:*.mpg=38;5;13:*.mpeg=38;5;13:*.m2v=38;5;13:*.mkv=38;5;13:*.webm=38;5;13:*.ogm=38;5;13:*.mp4=38;5;13:*.m4v=38;5;13:*.mp4v=38;5;13:*.vob=38;5;13:*.qt=38;5;13:*.nuv=38;5;13:*.wmv=38;5;13:*.asf=38;5;13:*.rm=38;5;13:*.rmvb=38;5;13:*.flc=38;5;13:*.avi=38;5;13:*.fli=38;5;13:*.flv=38;5;13:*.gl=38;5;13:*.dl=38;5;13:*.xcf=38;5;13:*.xwd=38;5;13:*.yuv=38;5;13:*.cgm=38;5;13:*.emf=38;5;13:*.axv=38;5;13:*.anx=38;5;13:*.ogv=38;5;13:*.ogx=38;5;13:*.aac=38;5;45:*.au=38;5;45:*.flac=38;5;45:*.mid=38;5;45:*.midi=38;5;45:*.mka=38;5;45:*.mp3=38;5;45:*.mpc=38;5;45:*.ogg=38;5;45:*.ra=38;5;45:*.wav=38;5;45:*.axa=38;5;45:*.oga=38;5;45:*.spx=38;5;45:*.xspf=38;5;45:
+LD_LIBRARY_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/lib:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/rlib/R/lib:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/lib64:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/lib64:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/lib64:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/lib:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/lib:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/lib64:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/lib:/opt/torque/current/lib:/usr/lib/oracle/11.2/client64/lib::
+LMOD_sys=Linux
+ASAN_OPTIONS=detect_leaks=0
+PBS_O_HOME=/storage/home/hcoda1/9/USER
+TMP_DIR=/scratch/1461311.sched-torque.pace.gatech.edu
+_ModuleTable010_=ay9tb2R1bGVzL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAiLCIvdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL21hbnVhbC9tb2R1bGVzL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L0NvcmUiLCIvdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL3NwYWNrL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZSIsIi9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAiLCIvc3RvcmFnZS9ob21lL2hjb2RhMS85L2Fzcml2YXN0YXZhNjQvZGF0YS9zcGFjay9zaGFyZS9zcGFjay9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9tdmFwaWNo
+LMOD_MODULERCFILE=/usr/local/pace-apps/lmod/etc/rc-coda.lua:/usr/local/pace-apps/lmod/etc/rc.lua
+PACE_FAMILY_COMPILER=gcc
+PACE_FAMILY_PYTHON_VERSION=2020.02
+CONDA_EXE=/usr/local/pace-apps/manual/packages/anaconda3/2020.02/bin/conda
+LMOD_MPI_NAME=mvapich2
+CPATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/rlib/R/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/include:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/include
+_ModuleTable004_=dGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iZ2NjLzEwLjEuMC9hcm1hZGlsbG8vOS44MDAuMy01a3RqanhqIix9LGdvb2dsZXRlc3Q9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC9nb29nbGV0ZXN0LzEuMTAuMC1lc2ZiNjJwLmx1YSIsWyJmdWxsTmFtZSJdPSJnb29nbGV0ZXN0LzEuMTAuMC1lc2ZiNjJwIixbImxvYWRPcmRlciJdPTkscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iZ29vZ2xldGVzdCIsfSxocGN0b29sa2l0PXtbImZuIl09
+__LMOD_STACK_F77=aWZvcnQ=
+PACE_COMPILER_VERSION=gcc-10.1.0
+PBS_WALLTIME=28800
+__LMOD_REF_COUNT__LMFILES_=/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core/xalt/2.8.4.lua:1;/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core/pace/2020.01.lua:1;/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/Core/gcc/10.1.0.lua:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/mvapich2/2.3.3-owyb32p.lua:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/boost/1.74.0-rykd3ms.lua:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-k76pekh/gcc/10.1.0/armadillo/9.800.3-5ktjjxj.lua:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/trng/4.22-e3d27oh.lua:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/scons/3.1.2-os63cz6.lua:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/googletest/1.10.0-esfb62p.lua:1;/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core/anaconda3/2020.02.lua:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/r/4.0.2-fgar2pn.lua:1;/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/hpctoolkit/2020.08.03-sbqfylw.lua:1
+PBS_MOMPORT=15003
+PBS_GPUFILE=/var/spool/torque/aux//1461311.sched-torque.pace.gatech.edugpu
+PYTHONROOT=/usr/local/pace-apps/manual/packages/anaconda3/2020.02
+PBS_O_QUEUE=inferno
+LMOD_FAMILY_MPI_VERSION=2.3.3-owyb32p
+_CE_CONDA=
+PATH=/usr/local/pace-apps/manual/packages/xalt/2.8.4/bin:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/bin:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/bin:/usr/local/pace-apps/manual/packages/anaconda3/2020.02/condabin:/usr/local/pace-apps/manual/packages/anaconda3/2020.02/bin:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/bin:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/bin:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/bin:/storage/home/hcoda1/9/USER/data/spack/bin:/usr/local/pace-apps/manual/packages/pace-scs/bin:/usr/local/pace-apps/manual/packages/pace/bin:/opt/TurboVNC/bin:/opt/pace-common/bin:/opt/torque/current/sbin:/opt/torque/current/bin:/opt/pace/bin:/opt/pace/sbin:/usr/lpp/mmfs/bin:/opt/moab/current/bin:/opt/mam/bin:/usr/lib64/ccache:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/ibutils/bin:/storage/home/hcoda1/9/USER/bin
+PBS_O_LOGNAME=USER
+MAIL=/var/spool/mail/USER
+_ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1aWxkVGltZSJdPWZhbHNlLFsiY19zaG9ydFRpbWUiXT1mYWxzZSxkZXB0aFQ9e30sZmFtaWx5PXtbImNvbXBpbGVyIl09ImdjYyIsWyJtcGkiXT0ibXZhcGljaDIiLFsicHl0aG9uIl09ImFuYWNvbmRhMyIsfSxtVD17YW5hY29uZGEzPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS9hbmFjb25kYTMvMjAyMC4wMi5sdWEiLFsiZnVsbE5hbWUiXT0iYW5hY29uZGEzLzIwMjAuMDIiLFsibG9hZE9yZGVyIl09MTAscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUi
+PBS_O_LANG=en_US.UTF-8
+_=/bin/env
+PBS_JOBCOOKIE=1F951EA1D1956B76651F7F740101AE72
+__LMOD_REF_COUNT_CPLUS_INCLUDE_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/include:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/include:1
+__LMOD_STACK_F90=aWZvcnQ=
+C_INCLUDE_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/include:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/include
+PWD=/storage/home/hcoda1/9/USER/Author-Kit
+F90=ifort
+_LMFILES_=/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core/xalt/2.8.4.lua:/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core/pace/2020.01.lua:/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/Core/gcc/10.1.0.lua:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/mvapich2/2.3.3-owyb32p.lua:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/boost/1.74.0-rykd3ms.lua:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-k76pekh/gcc/10.1.0/armadillo/9.800.3-5ktjjxj.lua:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/trng/4.22-e3d27oh.lua:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/scons/3.1.2-os63cz6.lua:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/googletest/1.10.0-esfb62p.lua:/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core/anaconda3/2020.02.lua:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/r/4.0.2-fgar2pn.lua:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0/hpctoolkit/2020.08.03-sbqfylw.lua
+JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64
+LANG=en_US.UTF-8
+PBS_NODENUM=0
+__LMOD_REF_COUNT_PYTHONPATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib/scons:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib64/python3.8/site-packages:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib/python3.8/site-packages:1;/usr/lib/oracle/11.2/lib64/python2.7/site-packages:1
+MOABHOMEDIR=/opt/moab/current
+MODULEPATH=/storage/coda1/p-saluru8/0/USER/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-owyb32p/gcc/10.1.0:/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/gcc/10.1.0:/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core:/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/Core:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0:/storage/home/hcoda1/9/USER/data/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-k76pekh
+PBS_NUM_NODES=1
+LOADEDMODULES=xalt/2.8.4:pace/2020.01:gcc/10.1.0:mvapich2/2.3.3-owyb32p:boost/1.74.0-rykd3ms:gcc/10.1.0/armadillo/9.800.3-5ktjjxj:trng/4.22-e3d27oh:scons/3.1.2-os63cz6:googletest/1.10.0-esfb62p:anaconda3/2020.02:r/4.0.2-fgar2pn:hpctoolkit/2020.08.03-sbqfylw
+XALT_GPU_TRACKING=yes
+_ModuleTable_Sz_=11
+PBS_O_SHELL=/bin/bash
+F77=ifort
+LMOD_CMD=/usr/local/pace-apps/lmod/8.3.1/libexec/lmod
+_ModuleTable005_=Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvaHBjdG9vbGtpdC8yMDIwLjA4LjAzLXNicWZ5bHcubHVhIixbImZ1bGxOYW1lIl09ImhwY3Rvb2xraXQvMjAyMC4wOC4wMy1zYnFmeWx3IixbImxvYWRPcmRlciJdPTEyLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImhwY3Rvb2xraXQiLH0sbXZhcGljaDI9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC9tdmFw
+LMOD_FAMILY_PYTHON_VERSION=2020.02
+PBS_JOBID=1461311.sched-torque.pace.gatech.edu
+LMOD_AVAIL_STYLE=en_grouped
+ANACONDA3ROOT=/usr/local/pace-apps/manual/packages/anaconda3/2020.02
+HISTCONTROL=ignoredups
+CXX=icpc
+_CE_M=
+XALT_ROOT=/usr/local/pace-apps/manual/packages/xalt/2.8.4
+GCC_ROOT=/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq
+LMOD_FAMILY_PYTHON=anaconda3
+HOME=/storage/home/hcoda1/9/USER
+SHLVL=2
+__LMOD_REF_COUNT_PATH=/usr/local/pace-apps/manual/packages/xalt/2.8.4/bin:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/bin:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/bin:1;/usr/local/pace-apps/manual/packages/anaconda3/2020.02/condabin:1;/usr/local/pace-apps/manual/packages/anaconda3/2020.02/bin:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/bin:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/bin:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/bin:1;/storage/home/hcoda1/9/USER/data/spack/bin:1;/usr/local/pace-apps/manual/packages/pace-scs/bin:1;/usr/local/pace-apps/manual/packages/pace/bin:1;/opt/TurboVNC/bin:1;/opt/pace-common/bin:1;/opt/torque/current/sbin:1;/opt/torque/current/bin:1;/opt/pace/bin:1;/opt/pace/sbin:1;/usr/lpp/mmfs/bin:1;/opt/moab/current/bin:1;/opt/mam/bin:1;/usr/lib64/ccache:1;/bin:1;/usr/bin:1;/usr/local/sbin:1;/usr/sbin:1;/opt/ibutils/bin:1
+__LMOD_REF_COUNT_CPATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/rlib/R/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/include:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/include:1
+PBS_O_HOST=login-phoenix-4.pace.gatech.edu
+XALT_SCALAR_SAMPLING=yes
+_ModuleTable002_=XT0iYW5hY29uZGEzIix9LGJvb3N0PXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvYm9vc3QvMS43NC4wLXJ5a2QzbXMubHVhIixbImZ1bGxOYW1lIl09ImJvb3N0LzEuNzQuMC1yeWtkM21zIixbImxvYWRPcmRlciJdPTUscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iYm9vc3QvMS43NC4wLXJ5a2QzbXMiLH0sZ2NjPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvc3BhY2svbW9kdWxlcy9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9Db3JlL2djYy8xMC4xLjAu
+FC=ifort
+__LMOD_REF_COUNT_INCLUDE=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/include:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/include:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/include:1
+PBS_VNODENUM=0
+BASH_ENV=/usr/local/pace-apps/lmod/lmod/init/bash
+_ModuleTable008_=M2N6Ni5sdWEiLFsiZnVsbE5hbWUiXT0ic2NvbnMvMy4xLjItb3M2M2N6NiIsWyJsb2FkT3JkZXIiXT04LHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InNjb25zIix9LHRybmc9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC90cm5nLzQuMjItZTNkMjdvaC5sdWEiLFsiZnVsbE5hbWUiXT0idHJuZy80LjIyLWUzZDI3b2giLFsibG9hZE9yZGVyIl09Nyxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJ0cm5nLzQuMjItZTNk
+LOGNAME=USER
+PYTHONPATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib/scons:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib64/python3.8/site-packages:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib/python3.8/site-packages:/usr/lib/oracle/11.2/lib64/python2.7/site-packages
+CONDA_PYTHON_EXE=/usr/local/pace-apps/manual/packages/anaconda3/2020.02/bin/python
+CVS_RSH=ssh
+SINGULARITY_BINDPATH=/usr/local/pace-apps/manual/packages/xalt
+MPIF77=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/bin/mpif77
+BOOST_ROOT=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq
+PBS_QUEUE=inferno
+XDG_DATA_DIRS=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/pango-1.41.0-lh2tv2rfpgvbo66lahbq4rwntzzmex7q/share:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/gobject-introspection-1.56.1-3qm3ocmwjmrj5seeqn2lcsi4olxjnxco/share:/storage/home/hcoda1/9/USER/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share
+PACE_FAMILY_PYTHON=anaconda3
+MODULESHOME=/usr/local/pace-apps/lmod/8.3.1
+__LMOD_REF_COUNT_LIBRARY_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/lib:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/rlib/R/lib:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/lib64:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/lib64:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/lib64:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/lib:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/lib:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/lib64:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/lib:1
+PBS_O_MAIL=/var/spool/mail/USER
+PBS_O_SUBMIT_FILTER=/opt/torque/current/sbin/torque_submitfilter
+PBS_MICFILE=/var/spool/torque/aux//1461311.sched-torque.pace.gatech.edumic
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+LMOD_SETTARG_FULL_SUPPORT=no
+COMPILER_PATH=/usr/local/pace-apps/manual/packages/xalt/2.8.4/bin
+__LMOD_REF_COUNT_LD_LIBRARY_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/lib:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/rlib/R/lib:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/lib64:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/lib:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/lib64:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/lib64:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/lib:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/lib:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/lib64:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/lib:1;/opt/torque/current/lib:1;/usr/lib/oracle/11.2/client64/lib:1
+PKG_CONFIG_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/lib64/pkgconfig:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/lib64/pkgconfig:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/lib/pkgconfig
+__Init_Default_Modules=1
+LMOD_MPI_VERSION=2.3.3-owyb32p
+__LMOD_REF_COUNT_LD_PRELOAD=/usr/local/pace-apps/manual/packages/xalt/2.8.4/lib64/libxalt_init.so:1
+LMOD_FAMILY_COMPILER=gcc
+PBS_NP=1
+CC=icc
+CMAKE_PREFIX_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq
+__LMOD_REF_COUNT_PKG_CONFIG_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/lib64/pkgconfig:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/lib64/pkgconfig:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/lib/pkgconfig:1
+GI_TYPELIB_PATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/pango-1.41.0-lh2tv2rfpgvbo66lahbq4rwntzzmex7q/lib/girepository-1.0:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/gobject-introspection-1.56.1-3qm3ocmwjmrj5seeqn2lcsi4olxjnxco/lib/girepository-1.0
+PBS_O_SERVER=sched-torque.pace.gatech.edu
+PBS_NUM_PPN=1
+ORACLE_HOME=/usr/lib/oracle/11.2/client64/
+LMOD_DIR=/usr/local/pace-apps/lmod/8.3.1/libexec
+__LMOD_REF_COUNT_MANPATH=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/share/man:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/share/man:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/man:1;/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/share/man:1;/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/share/man:1;/usr/local/pace-apps/lmod/lmod/share/man:1;/opt/torque/current/share/man:1;/opt/moab/current/share/man:1
+INCLUDE=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/googletest-1.10.0-esfb62po5cuhzbikgpcrvni2cbz7rnfy/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/trng-4.22-e3d27ohl4et5y2lfwfhj5nu2pqa5f3fe/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/armadillo-9.800.3-5ktjjxj62pls7c5adewpjigmjsxhznsd/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/boost-1.74.0-rykd3msmzexnlc3tswjr2skt5delrauq/include:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/include:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/include
+_ModuleTable006_=aWNoMi8yLjMuMy1vd3liMzJwLmx1YSIsWyJmdWxsTmFtZSJdPSJtdmFwaWNoMi8yLjMuMy1vd3liMzJwIixbImxvYWRPcmRlciJdPTQscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ibXZhcGljaDIvMi4zLjMtb3d5YjMycCIsfSxwYWNlPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS9wYWNlLzIwMjAuMDEubHVhIixbImZ1bGxOYW1lIl09InBhY2UvMjAyMC4wMSIsWyJsb2FkT3JkZXIiXT0yLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InBhY2UvMjAyMC4w
+__LMOD_Priority_PATH=/usr/local/pace-apps/manual/packages/xalt/2.8.4/bin:-100
+MPIF90=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/bin/mpif90
+PBS_NODEFILE=/var/spool/torque/aux//1461311.sched-torque.pace.gatech.edu
+LMOD_FAMILY_MPI=mvapich2
+PBS_O_PATH=/usr/local/pace-apps/manual/packages/xalt/2.8.4/bin:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/hpctoolkit-2020.08.03-sbqfylwxl2aeiy6e46fuhsjhepde2ha3/bin:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/r-4.0.2-fgar2pnqerfs5khswcxkqnyc4mwsmkqs/bin:/usr/local/pace-apps/manual/packages/anaconda3/2020.02/condabin:/usr/local/pace-apps/manual/packages/anaconda3/2020.02/bin:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/scons-3.1.2-os63cz6ge7mulqs2bcehpl5wo3c6uwzp/bin:/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/bin:/usr/local/pace-apps/spack/packages/0.15/linux-rhel7-x86_64/gcc-4.8.5/gcc-10.1.0-ebl35cgtmoaerlwli5ohapribs3mkegq/bin:/storage/home/hcoda1/9/USER/data/spack/bin:/usr/local/pace-apps/manual/packages/pace-scs/bin:/usr/local/pace-apps/manual/packages/pace/bin:/opt/TurboVNC/bin:/opt/pace-common/bin:/opt/torque/current/sbin:/opt/torque/current/bin:/opt/pace/bin:/opt/pace/sbin:/usr/lpp/mmfs/bin:/opt/moab/current/bin:/opt/mam/bin:/usr/lib64/ccache:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/ibutils/bin:/storage/home/hcoda1/9/USER/bin
+MPICXX=/storage/coda1/p-saluru8/0/USER/spack/opt/spack/linux-rhel7-cascadelake/gcc-10.1.0/mvapich2-2.3.3-owyb32pzflnubcghl6cduluyf7ihblys/bin/mpicxx
+BASH_FUNC__spack_shell_wrapper()=() {  for var in LD_LIBRARY_PATH DYLD_LIBRARY_PATH DYLD_FALLBACK_LIBRARY_PATH;
+ do
+ eval "if [ -n \"\${${var}-}\" ]; then export SPACK_$var=\${${var}}; fi";
+ done;
+ if [ -n "${ZSH_VERSION:-}" ]; then
+ emulate -L sh;
+ fi;
+ _sp_flags="";
+ while [ ! -z ${1+x} ] && [ "${1#-}" != "${1}" ]; do
+ _sp_flags="$_sp_flags $1";
+ shift;
+ done;
+ if [ -n "$_sp_flags" ] && [ "${_sp_flags#*h}" != "${_sp_flags}" ] || [ "${_sp_flags#*V}" != "${_sp_flags}" ]; then
+ command spack $_sp_flags "$@";
+ return;
+ fi;
+ _sp_subcommand="";
+ if [ ! -z ${1+x} ]; then
+ _sp_subcommand="$1";
+ shift;
+ fi;
+ case $_sp_subcommand in 
+ "cd")
+ _sp_arg="";
+ if [ -n "$1" ]; then
+ _sp_arg="$1";
+ shift;
+ fi;
+ if [ "$_sp_arg" = "-h" ] || [ "$_sp_arg" = "--help" ]; then
+ command spack cd -h;
+ else
+ LOC="$(spack location $_sp_arg "$@")";
+ if [ -d "$LOC" ]; then
+ cd "$LOC";
+ else
+ return 1;
+ fi;
+ fi;
+ return
+ ;;
+ "env")
+ _sp_arg="";
+ if [ -n "$1" ]; then
+ _sp_arg="$1";
+ shift;
+ fi;
+ if [ "$_sp_arg" = "-h" ] || [ "$_sp_arg" = "--help" ]; then
+ command spack env -h;
+ else
+ case $_sp_arg in 
+ activate)
+ _a=" $@";
+ if [ -z ${1+x} ] || [ "${_a#* --sh}" != "$_a" ] || [ "${_a#* --csh}" != "$_a" ] || [ "${_a#* -h}" != "$_a" ] || [ "${_a#* --help}" != "$_a" ]; then
+ command spack env activate "$@";
+ else
+ eval $(command spack $_sp_flags env activate --sh "$@");
+ fi
+ ;;
+ deactivate)
+ _a=" $@";
+ if [ "${_a#* --sh}" != "$_a" ] || [ "${_a#* --csh}" != "$_a" ]; then
+ command spack env deactivate "$@";
+ else
+ if [ -n "$*" ]; then
+ command spack env deactivate -h;
+ else
+ eval $(command spack $_sp_flags env deactivate --sh);
+ fi;
+ fi
+ ;;
+ *)
+ command spack env $_sp_arg "$@"
+ ;;
+ esac;
+ fi;
+ return
+ ;;
+ "load" | "unload")
+ _a=" $@";
+ if [ "${_a#* --sh}" != "$_a" ] || [ "${_a#* --csh}" != "$_a" ] || [ "${_a#* -h}" != "$_a" ] || [ "${_a#* --help}" != "$_a" ]; then
+ command spack $_sp_flags $_sp_subcommand "$@";
+ else
+ eval $(command spack $_sp_flags $_sp_subcommand --sh "$@" ||                     echo "return 1");
+ fi
+ ;;
+ *)
+ command spack $_sp_flags $_sp_subcommand "$@"
+ ;;
+ esac
+}
+BASH_FUNC_module()=() {  eval $($LMOD_CMD bash "$@") && eval $(${LMOD_SETTARG_CMD:-:} -s sh)
+}
+BASH_FUNC_spack()=() {  : this is a shell function from: /storage/home/hcoda1/9/USER/data/spack/share/spack/setup-env.sh;
+ : the real spack script is here: /storage/home/hcoda1/9/USER/data/spack/bin/spack;
+ _spack_shell_wrapper "$@";
+ return $?
+}
+BASH_FUNC_ml()=() {  eval $($LMOD_DIR/ml_cmd "$@")
+}
++ lsb_release -a
+LSB Version:	:core-4.1-amd64:core-4.1-noarch
+Distributor ID:	RedHatEnterpriseServer
+Description:	Red Hat Enterprise Linux Server release 7.6 (Maipo)
+Release:	7.6
+Codename:	Maipo
++ uname -a
+Linux atl1-1-02-010-19-l.pace.gatech.edu 3.10.0-957.27.2.el7.x86_64 #1 SMP Tue Jul 9 16:53:14 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
++ lscpu
+Architecture:          x86_64
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian
+CPU(s):                24
+On-line CPU(s) list:   0-23
+Thread(s) per core:    1
+Core(s) per socket:    12
+Socket(s):             2
+NUMA node(s):          2
+Vendor ID:             GenuineIntel
+CPU family:            6
+Model:                 85
+Model name:            Intel(R) Xeon(R) Gold 6226 CPU @ 2.70GHz
+Stepping:              7
+CPU MHz:               2699.835
+CPU max MHz:           3700.0000
+CPU min MHz:           1200.0000
+BogoMIPS:              5400.00
+Virtualization:        VT-x
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              1024K
+L3 cache:              19712K
+NUMA node0 CPU(s):     0-11
+NUMA node1 CPU(s):     12-23
+Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb cat_l3 cdp_l3 intel_ppin intel_pt ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts hwp hwp_act_window hwp_epp hwp_pkg_req pku ospke avx512_vnni md_clear spec_ctrl intel_stibp flush_l1d arch_capabilities
++ cat /proc/meminfo
+MemTotal:       196470076 kB
+MemFree:        176673948 kB
+MemAvailable:   181352712 kB
+Buffers:            8388 kB
+Cached:          5456384 kB
+SwapCached:        53660 kB
+Active:         12287808 kB
+Inactive:        2881048 kB
+Active(anon):    9910848 kB
+Inactive(anon):   460964 kB
+Active(file):    2376960 kB
+Inactive(file):  2420084 kB
+Unevictable:       72912 kB
+Mlocked:           72912 kB
+SwapTotal:       8388604 kB
+SwapFree:        8068312 kB
+Dirty:               436 kB
+Writeback:             0 kB
+AnonPages:       9723468 kB
+Mapped:           626508 kB
+Shmem:            658400 kB
+Slab:            1802432 kB
+SReclaimable:     812896 kB
+SUnreclaim:       989536 kB
+KernelStack:       18400 kB
+PageTables:        39216 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    106623640 kB
+Committed_AS:   16041848 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:     1401688 kB
+VmallocChunk:   34257746136 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:   8278016 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:      616624 kB
+DirectMap2M:    21049344 kB
+DirectMap1G:    180355072 kB
++ inxi -F -c0
+./collect_environment.sh: line 14: inxi: command not found
++ lsblk -a
+NAME              MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+loop0               7:0    0        1 loop 
+loop1               7:1    0        1 loop 
+nvme0n1           259:0    0  1.5T  0 disk 
+├─nvme0n1p1       259:1    0  256M  0 part /boot/efi
+├─nvme0n1p2       259:2    0  512M  0 part /boot
+├─nvme0n1p3       259:3    0  1.5T  0 part 
+│ ├─sysvg-root    253:0    0   50G  0 lvm  /
+│ ├─sysvg-scratch 253:1    0  1.4T  0 lvm  /scratch
+│ ├─sysvg-var     253:2    0   10G  0 lvm  /var
+│ └─sysvg-tmp     253:3    0   10G  0 lvm  /tmp
+└─nvme0n1p4       259:4    0    8G  0 part [SWAP]
++ lsscsi -s
++ module list
+++ /usr/local/pace-apps/lmod/8.3.1/libexec/lmod bash list
+
+Currently Loaded Modules:
+  1) xalt/2.8.4     3) gcc/10.1.0               5) boost/1.74.0-rykd3ms                   7) trng/4.22-e3d27oh     9) googletest/1.10.0-esfb62p  11) r/4.0.2-fgar2pn
+  2) pace/2020.01   4) mvapich2/2.3.3-owyb32p   6) gcc/10.1.0/armadillo/9.800.3-5ktjjxj   8) scons/3.1.2-os63cz6  10) anaconda3/2020.02          12) hpctoolkit/2020.08.03-sbqfylw
++ eval 'MODULEPATH=/storage/coda1/p-saluru8/0/asrivastava64/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-owyb32p/gcc/10.1.0:/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/gcc/10.1.0:/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core:/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/Core:/storage/home/hcoda1/9/asrivastava64/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0:/storage/home/hcoda1/9/asrivastava64/data/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-k76pekh;' export 'MODULEPATH;' '_ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1aWxkVGltZSJdPWZhbHNlLFsiY19zaG9ydFRpbWUiXT1mYWxzZSxkZXB0aFQ9e30sZmFtaWx5PXtbImNvbXBpbGVyIl09ImdjYyIsWyJtcGkiXT0ibXZhcGljaDIiLFsicHl0aG9uIl09ImFuYWNvbmRhMyIsfSxtVD17YW5hY29uZGEzPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS9hbmFjb25kYTMvMjAyMC4wMi5sdWEiLFsiZnVsbE5hbWUiXT0iYW5hY29uZGEzLzIwMjAuMDIiLFsibG9hZE9yZGVyIl09MTAscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUi;' export '_ModuleTable001_;' '_ModuleTable002_=XT0iYW5hY29uZGEzIix9LGJvb3N0PXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvYm9vc3QvMS43NC4wLXJ5a2QzbXMubHVhIixbImZ1bGxOYW1lIl09ImJvb3N0LzEuNzQuMC1yeWtkM21zIixbImxvYWRPcmRlciJdPTUscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iYm9vc3QvMS43NC4wLXJ5a2QzbXMiLH0sZ2NjPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvc3BhY2svbW9kdWxlcy9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9Db3JlL2djYy8xMC4xLjAu;' export '_ModuleTable002_;' '_ModuleTable003_=bHVhIixbImZ1bGxOYW1lIl09ImdjYy8xMC4xLjAiLFsibG9hZE9yZGVyIl09Myxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJnY2MvMTAuMS4wIix9LFsiZ2NjLzEwLjEuMC9hcm1hZGlsbG8iXT17WyJmbiJdPSIvc3RvcmFnZS9ob21lL2hjb2RhMS85L2Fzcml2YXN0YXZhNjQvZGF0YS9zcGFjay9zaGFyZS9zcGFjay9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9tdmFwaWNoMi8yLjMuMy1rNzZwZWtoL2djYy8xMC4xLjAvYXJtYWRpbGxvLzkuODAwLjMtNWt0amp4ai5sdWEiLFsiZnVsbE5hbWUiXT0iZ2NjLzEwLjEuMC9hcm1hZGlsbG8vOS44MDAuMy01a3RqanhqIixbImxvYWRPcmRlciJdPTYscHJvcFQ9e30sWyJz;' export '_ModuleTable003_;' '_ModuleTable004_=dGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iZ2NjLzEwLjEuMC9hcm1hZGlsbG8vOS44MDAuMy01a3RqanhqIix9LGdvb2dsZXRlc3Q9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC9nb29nbGV0ZXN0LzEuMTAuMC1lc2ZiNjJwLmx1YSIsWyJmdWxsTmFtZSJdPSJnb29nbGV0ZXN0LzEuMTAuMC1lc2ZiNjJwIixbImxvYWRPcmRlciJdPTkscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iZ29vZ2xldGVzdCIsfSxocGN0b29sa2l0PXtbImZuIl09;' export '_ModuleTable004_;' '_ModuleTable005_=Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvaHBjdG9vbGtpdC8yMDIwLjA4LjAzLXNicWZ5bHcubHVhIixbImZ1bGxOYW1lIl09ImhwY3Rvb2xraXQvMjAyMC4wOC4wMy1zYnFmeWx3IixbImxvYWRPcmRlciJdPTEyLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImhwY3Rvb2xraXQiLH0sbXZhcGljaDI9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC9tdmFw;' export '_ModuleTable005_;' '_ModuleTable006_=aWNoMi8yLjMuMy1vd3liMzJwLmx1YSIsWyJmdWxsTmFtZSJdPSJtdmFwaWNoMi8yLjMuMy1vd3liMzJwIixbImxvYWRPcmRlciJdPTQscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ibXZhcGljaDIvMi4zLjMtb3d5YjMycCIsfSxwYWNlPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS9wYWNlLzIwMjAuMDEubHVhIixbImZ1bGxOYW1lIl09InBhY2UvMjAyMC4wMSIsWyJsb2FkT3JkZXIiXT0yLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InBhY2UvMjAyMC4w;' export '_ModuleTable006_;' '_ModuleTable007_=MSIsfSxyPXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvci80LjAuMi1mZ2FyMnBuLmx1YSIsWyJmdWxsTmFtZSJdPSJyLzQuMC4yLWZnYXIycG4iLFsibG9hZE9yZGVyIl09MTEscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ici80LjAuMi1mZ2FyMnBuIix9LHNjb25zPXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvc2NvbnMvMy4xLjItb3M2;' export '_ModuleTable007_;' '_ModuleTable008_=M2N6Ni5sdWEiLFsiZnVsbE5hbWUiXT0ic2NvbnMvMy4xLjItb3M2M2N6NiIsWyJsb2FkT3JkZXIiXT04LHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InNjb25zIix9LHRybmc9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC90cm5nLzQuMjItZTNkMjdvaC5sdWEiLFsiZnVsbE5hbWUiXT0idHJuZy80LjIyLWUzZDI3b2giLFsibG9hZE9yZGVyIl09Nyxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJ0cm5nLzQuMjItZTNk;' export '_ModuleTable008_;' '_ModuleTable009_=MjdvaCIsfSx4YWx0PXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS94YWx0LzIuOC40Lmx1YSIsWyJmdWxsTmFtZSJdPSJ4YWx0LzIuOC40IixbImxvYWRPcmRlciJdPTEscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MSxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ieGFsdCIsfSx9LG1wYXRoQT17Ii9zdG9yYWdlL2NvZGExL3Atc2FsdXJ1OC8wL2Fzcml2YXN0YXZhNjQvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvbXZhcGljaDIvMi4zLjMtb3d5YjMycC9nY2MvMTAuMS4wIiwiL3Vzci9sb2NhbC9wYWNlLWFwcHMvbW9kdWxlcy9zcGFj;' export '_ModuleTable009_;' '_ModuleTable010_=ay9tb2R1bGVzL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAiLCIvdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL21hbnVhbC9tb2R1bGVzL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L0NvcmUiLCIvdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL3NwYWNrL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZSIsIi9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAiLCIvc3RvcmFnZS9ob21lL2hjb2RhMS85L2Fzcml2YXN0YXZhNjQvZGF0YS9zcGFjay9zaGFyZS9zcGFjay9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9tdmFwaWNo;' export '_ModuleTable010_;' '_ModuleTable011_=Mi8yLjMuMy1rNzZwZWtoIix9LFsic3lzdGVtQmFzZU1QQVRIIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZTovdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL3NwYWNrL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZSIsfQ==;' export '_ModuleTable011_;' '_ModuleTable_Sz_=11;' export '_ModuleTable_Sz_;'
+++ MODULEPATH=/storage/coda1/p-saluru8/0/asrivastava64/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-owyb32p/gcc/10.1.0:/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/gcc/10.1.0:/usr/local/pace-apps/modules/manual/modules/lmod/linux-rhel7-x86_64/Core:/usr/local/pace-apps/modules/spack/modules/lmod/linux-rhel7-x86_64/Core:/storage/home/hcoda1/9/asrivastava64/data/spack/share/spack/lmod/linux-rhel7-x86_64/gcc/10.1.0:/storage/home/hcoda1/9/asrivastava64/data/spack/share/spack/lmod/linux-rhel7-x86_64/mvapich2/2.3.3-k76pekh
+++ export MODULEPATH
+++ _ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1aWxkVGltZSJdPWZhbHNlLFsiY19zaG9ydFRpbWUiXT1mYWxzZSxkZXB0aFQ9e30sZmFtaWx5PXtbImNvbXBpbGVyIl09ImdjYyIsWyJtcGkiXT0ibXZhcGljaDIiLFsicHl0aG9uIl09ImFuYWNvbmRhMyIsfSxtVD17YW5hY29uZGEzPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS9hbmFjb25kYTMvMjAyMC4wMi5sdWEiLFsiZnVsbE5hbWUiXT0iYW5hY29uZGEzLzIwMjAuMDIiLFsibG9hZE9yZGVyIl09MTAscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUi
+++ export _ModuleTable001_
+++ _ModuleTable002_=XT0iYW5hY29uZGEzIix9LGJvb3N0PXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvYm9vc3QvMS43NC4wLXJ5a2QzbXMubHVhIixbImZ1bGxOYW1lIl09ImJvb3N0LzEuNzQuMC1yeWtkM21zIixbImxvYWRPcmRlciJdPTUscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iYm9vc3QvMS43NC4wLXJ5a2QzbXMiLH0sZ2NjPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvc3BhY2svbW9kdWxlcy9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9Db3JlL2djYy8xMC4xLjAu
+++ export _ModuleTable002_
+++ _ModuleTable003_=bHVhIixbImZ1bGxOYW1lIl09ImdjYy8xMC4xLjAiLFsibG9hZE9yZGVyIl09Myxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJnY2MvMTAuMS4wIix9LFsiZ2NjLzEwLjEuMC9hcm1hZGlsbG8iXT17WyJmbiJdPSIvc3RvcmFnZS9ob21lL2hjb2RhMS85L2Fzcml2YXN0YXZhNjQvZGF0YS9zcGFjay9zaGFyZS9zcGFjay9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9tdmFwaWNoMi8yLjMuMy1rNzZwZWtoL2djYy8xMC4xLjAvYXJtYWRpbGxvLzkuODAwLjMtNWt0amp4ai5sdWEiLFsiZnVsbE5hbWUiXT0iZ2NjLzEwLjEuMC9hcm1hZGlsbG8vOS44MDAuMy01a3RqanhqIixbImxvYWRPcmRlciJdPTYscHJvcFQ9e30sWyJz
+++ export _ModuleTable003_
+++ _ModuleTable004_=dGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iZ2NjLzEwLjEuMC9hcm1hZGlsbG8vOS44MDAuMy01a3RqanhqIix9LGdvb2dsZXRlc3Q9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC9nb29nbGV0ZXN0LzEuMTAuMC1lc2ZiNjJwLmx1YSIsWyJmdWxsTmFtZSJdPSJnb29nbGV0ZXN0LzEuMTAuMC1lc2ZiNjJwIixbImxvYWRPcmRlciJdPTkscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iZ29vZ2xldGVzdCIsfSxocGN0b29sa2l0PXtbImZuIl09
+++ export _ModuleTable004_
+++ _ModuleTable005_=Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvaHBjdG9vbGtpdC8yMDIwLjA4LjAzLXNicWZ5bHcubHVhIixbImZ1bGxOYW1lIl09ImhwY3Rvb2xraXQvMjAyMC4wOC4wMy1zYnFmeWx3IixbImxvYWRPcmRlciJdPTEyLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09ImhwY3Rvb2xraXQiLH0sbXZhcGljaDI9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC9tdmFw
+++ export _ModuleTable005_
+++ _ModuleTable006_=aWNoMi8yLjMuMy1vd3liMzJwLmx1YSIsWyJmdWxsTmFtZSJdPSJtdmFwaWNoMi8yLjMuMy1vd3liMzJwIixbImxvYWRPcmRlciJdPTQscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ibXZhcGljaDIvMi4zLjMtb3d5YjMycCIsfSxwYWNlPXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS9wYWNlLzIwMjAuMDEubHVhIixbImZ1bGxOYW1lIl09InBhY2UvMjAyMC4wMSIsWyJsb2FkT3JkZXIiXT0yLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InBhY2UvMjAyMC4w
+++ export _ModuleTable006_
+++ _ModuleTable007_=MSIsfSxyPXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvci80LjAuMi1mZ2FyMnBuLmx1YSIsWyJmdWxsTmFtZSJdPSJyLzQuMC4yLWZnYXIycG4iLFsibG9hZE9yZGVyIl09MTEscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ici80LjAuMi1mZ2FyMnBuIix9LHNjb25zPXtbImZuIl09Ii9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAvc2NvbnMvMy4xLjItb3M2
+++ export _ModuleTable007_
+++ _ModuleTable008_=M2N6Ni5sdWEiLFsiZnVsbE5hbWUiXT0ic2NvbnMvMy4xLjItb3M2M2N6NiIsWyJsb2FkT3JkZXIiXT04LHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTAsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InNjb25zIix9LHRybmc9e1siZm4iXT0iL3N0b3JhZ2UvaG9tZS9oY29kYTEvOS9hc3JpdmFzdGF2YTY0L2RhdGEvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvZ2NjLzEwLjEuMC90cm5nLzQuMjItZTNkMjdvaC5sdWEiLFsiZnVsbE5hbWUiXT0idHJuZy80LjIyLWUzZDI3b2giLFsibG9hZE9yZGVyIl09Nyxwcm9wVD17fSxbInN0YWNrRGVwdGgiXT0wLFsic3RhdHVzIl09ImFjdGl2ZSIsWyJ1c2VyTmFtZSJdPSJ0cm5nLzQuMjItZTNk
+++ export _ModuleTable008_
+++ _ModuleTable009_=MjdvaCIsfSx4YWx0PXtbImZuIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZS94YWx0LzIuOC40Lmx1YSIsWyJmdWxsTmFtZSJdPSJ4YWx0LzIuOC40IixbImxvYWRPcmRlciJdPTEscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MSxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ieGFsdCIsfSx9LG1wYXRoQT17Ii9zdG9yYWdlL2NvZGExL3Atc2FsdXJ1OC8wL2Fzcml2YXN0YXZhNjQvc3BhY2svc2hhcmUvc3BhY2svbG1vZC9saW51eC1yaGVsNy14ODZfNjQvbXZhcGljaDIvMi4zLjMtb3d5YjMycC9nY2MvMTAuMS4wIiwiL3Vzci9sb2NhbC9wYWNlLWFwcHMvbW9kdWxlcy9zcGFj
+++ export _ModuleTable009_
+++ _ModuleTable010_=ay9tb2R1bGVzL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAiLCIvdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL21hbnVhbC9tb2R1bGVzL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L0NvcmUiLCIvdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL3NwYWNrL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZSIsIi9zdG9yYWdlL2hvbWUvaGNvZGExLzkvYXNyaXZhc3RhdmE2NC9kYXRhL3NwYWNrL3NoYXJlL3NwYWNrL2xtb2QvbGludXgtcmhlbDcteDg2XzY0L2djYy8xMC4xLjAiLCIvc3RvcmFnZS9ob21lL2hjb2RhMS85L2Fzcml2YXN0YXZhNjQvZGF0YS9zcGFjay9zaGFyZS9zcGFjay9sbW9kL2xpbnV4LXJoZWw3LXg4Nl82NC9tdmFwaWNo
+++ export _ModuleTable010_
+++ _ModuleTable011_=Mi8yLjMuMy1rNzZwZWtoIix9LFsic3lzdGVtQmFzZU1QQVRIIl09Ii91c3IvbG9jYWwvcGFjZS1hcHBzL21vZHVsZXMvbWFudWFsL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZTovdXNyL2xvY2FsL3BhY2UtYXBwcy9tb2R1bGVzL3NwYWNrL21vZHVsZXMvbG1vZC9saW51eC1yaGVsNy14ODZfNjQvQ29yZSIsfQ==
+++ export _ModuleTable011_
+++ _ModuleTable_Sz_=11
+++ export _ModuleTable_Sz_
+++ : -s sh
++ eval
++ nvidia-smi
+./collect_environment.sh: line 18: nvidia-smi: command not found
++ cat
++ lshw -short -quiet -sanitize
+WARNING: you should run this program as super-user.
+H/W path         Device  Class          Description
+===================================================
+                         system         Computer
+/0                       bus            Motherboard
+/0/1                     memory         190GiB System memory
+/0/2                     processor      Intel(R) Xeon(R) Gold 6226 CPU @ 2.70GHz
+/0/6                     processor      Intel(R) Xeon(R) Gold 6226 CPU @ 2.70GHz
+/0/100                   bridge         Sky Lake-E DMI3 Registers
+/0/100/4                 generic        Sky Lake-E CBDMA Registers
+/0/100/4.1               generic        Sky Lake-E CBDMA Registers
+/0/100/4.2               generic        Sky Lake-E CBDMA Registers
+/0/100/4.3               generic        Sky Lake-E CBDMA Registers
+/0/100/4.4               generic        Sky Lake-E CBDMA Registers
+/0/100/4.5               generic        Sky Lake-E CBDMA Registers
+/0/100/4.6               generic        Sky Lake-E CBDMA Registers
+/0/100/4.7               generic        Sky Lake-E CBDMA Registers
+/0/100/5                 generic        Sky Lake-E MM/Vt-d Configuration Registers
+/0/100/5.2               generic        Sky Lake-E RAS
+/0/100/5.4               generic        Sky Lake-E IOAPIC
+/0/100/8                 generic        Sky Lake-E Ubox Registers
+/0/100/8.1               generic        Sky Lake-E Ubox Registers
+/0/100/8.2               generic        Sky Lake-E Ubox Registers
+/0/100/11                generic        C620 Series Chipset Family MROM 0
+/0/100/11.1              generic        C620 Series Chipset Family MROM 1
+/0/100/11.5              storage        C620 Series Chipset Family SSATA Controller [AHCI mode]
+/0/100/14                bus            C620 Series Chipset Family USB 3.0 xHCI Controller
+/0/100/14.2              generic        C620 Series Chipset Family Thermal Subsystem
+/0/100/16                communication  C620 Series Chipset Family MEI Controller #1
+/0/100/16.1              communication  C620 Series Chipset Family MEI Controller #2
+/0/100/16.4              communication  C620 Series Chipset Family MEI Controller #3
+/0/100/17                storage        C620 Series Chipset Family SATA Controller [AHCI mode]
+/0/100/1c                bridge         C620 Series Chipset Family PCI Express Root Port #1
+/0/100/1c.4              bridge         C620 Series Chipset Family PCI Express Root Port #5
+/0/100/1c.5              bridge         C620 Series Chipset Family PCI Express Root Port #6
+/0/100/1c.5/0            bridge         AST1150 PCI-to-PCI Bridge
+/0/100/1c.5/0/0          display        ASPEED Graphics Family
+/0/100/1f                bridge         C621 Series Chipset LPC/eSPI Controller
+/0/100/1f.2              memory         Memory controller
+/0/100/1f.4              bus            C620 Series Chipset Family SMBus
+/0/100/1f.5              bus            C620 Series Chipset Family SPI Controller
+/0/101                   bridge         Sky Lake-E PCI Express Root Port C
+/0/101/0         eno1    network        Ethernet Controller 10G X550T
+/0/101/0.1       eno2    network        Ethernet Controller 10G X550T
+/0/7                     generic        Sky Lake-E VT-d
+/0/9                     generic        Sky Lake-E RAS Configuration Registers
+/0/a                     generic        Sky Lake-E IOxAPIC Configuration Registers
+/0/b                     generic        Sky Lake-E CHA Registers
+/0/c                     generic        Sky Lake-E CHA Registers
+/0/d                     generic        Sky Lake-E CHA Registers
+/0/e                     generic        Sky Lake-E CHA Registers
+/0/f                     generic        Sky Lake-E CHA Registers
+/0/10                    generic        Sky Lake-E CHA Registers
+/0/11                    generic        Sky Lake-E CHA Registers
+/0/12                    generic        Sky Lake-E CHA Registers
+/0/13                    generic        Sky Lake-E CHA Registers
+/0/14                    generic        Sky Lake-E CHA Registers
+/0/15                    generic        Sky Lake-E CHA Registers
+/0/16                    generic        Sky Lake-E CHA Registers
+/0/17                    generic        Sky Lake-E CHA Registers
+/0/18                    generic        Sky Lake-E CHA Registers
+/0/19                    generic        Sky Lake-E CHA Registers
+/0/1a                    generic        Sky Lake-E CHA Registers
+/0/1b                    generic        Sky Lake-E CHA Registers
+/0/1c                    generic        Sky Lake-E CHA Registers
+/0/1d                    generic        Sky Lake-E CHA Registers
+/0/1e                    generic        Sky Lake-E CHA Registers
+/0/1f                    generic        Sky Lake-E CHA Registers
+/0/20                    generic        Sky Lake-E CHA Registers
+/0/21                    generic        Sky Lake-E CHA Registers
+/0/22                    generic        Sky Lake-E CHA Registers
+/0/23                    generic        Sky Lake-E CHA Registers
+/0/24                    generic        Sky Lake-E CHA Registers
+/0/25                    generic        Sky Lake-E CHA Registers
+/0/26                    generic        Sky Lake-E CHA Registers
+/0/27                    generic        Sky Lake-E CHA Registers
+/0/28                    generic        Sky Lake-E CHA Registers
+/0/29                    generic        Sky Lake-E CHA Registers
+/0/2a                    generic        Sky Lake-E CHA Registers
+/0/2b                    generic        Sky Lake-E CHA Registers
+/0/2c                    generic        Sky Lake-E CHA Registers
+/0/2d                    generic        Sky Lake-E CHA Registers
+/0/2e                    generic        Sky Lake-E CHA Registers
+/0/2f                    generic        Sky Lake-E CHA Registers
+/0/30                    generic        Sky Lake-E CHA Registers
+/0/31                    generic        Sky Lake-E CHA Registers
+/0/32                    generic        Sky Lake-E CHA Registers
+/0/33                    generic        Sky Lake-E CHA Registers
+/0/34                    generic        Sky Lake-E CHA Registers
+/0/35                    generic        Sky Lake-E CHA Registers
+/0/36                    generic        Sky Lake-E CHA Registers
+/0/37                    generic        Sky Lake-E CHA Registers
+/0/38                    generic        Sky Lake-E CHA Registers
+/0/39                    generic        Sky Lake-E CHA Registers
+/0/3a                    generic        Sky Lake-E CHA Registers
+/0/3b                    generic        Sky Lake-E CHA Registers
+/0/3c                    generic        Sky Lake-E CHA Registers
+/0/3d                    generic        Sky Lake-E CHA Registers
+/0/3e                    generic        Sky Lake-E CHA Registers
+/0/3f                    generic        Sky Lake-E CHA Registers
+/0/40                    generic        Sky Lake-E CHA Registers
+/0/41                    generic        Sky Lake-E CHA Registers
+/0/42                    generic        Sky Lake-E CHA Registers
+/0/43                    generic        Sky Lake-E CHA Registers
+/0/44                    generic        Sky Lake-E CHA Registers
+/0/45                    generic        Sky Lake-E CHA Registers
+/0/46                    generic        Sky Lake-E CHA Registers
+/0/47                    generic        Sky Lake-E PCU Registers
+/0/48                    generic        Sky Lake-E PCU Registers
+/0/49                    generic        Sky Lake-E PCU Registers
+/0/4a                    generic        Sky Lake-E PCU Registers
+/0/4b                    generic        Sky Lake-E PCU Registers
+/0/4c                    generic        Sky Lake-E PCU Registers
+/0/4d                    generic        Sky Lake-E PCU Registers
+/0/102                   bridge         Sky Lake-E PCI Express Root Port A
+/0/102/0         ib0     network        MT28908 Family [ConnectX-6]
+/0/4e                    generic        Sky Lake-E VT-d
+/0/4f                    generic        Sky Lake-E RAS Configuration Registers
+/0/50                    generic        Sky Lake-E IOxAPIC Configuration Registers
+/0/51                    generic        Sky Lake-E Integrated Memory Controller
+/0/52                    generic        Sky Lake-E Integrated Memory Controller
+/0/53                    generic        Sky Lake-E Integrated Memory Controller
+/0/54                    generic        Sky Lake-E Integrated Memory Controller
+/0/55                    generic        Sky Lake-E Integrated Memory Controller
+/0/56                    generic        Sky Lake-E Integrated Memory Controller
+/0/57                    generic        Sky Lake-E Integrated Memory Controller
+/0/58                    generic        Sky Lake-E LM Channel 1
+/0/59                    generic        Sky Lake-E LMS Channel 1
+/0/5a                    generic        Sky Lake-E LMDP Channel 1
+/0/5b                    generic        Sky Lake-E DECS Channel 2
+/0/5c                    generic        Sky Lake-E LM Channel 2
+/0/5d                    generic        Sky Lake-E LMS Channel 2
+/0/5e                    generic        Sky Lake-E LMDP Channel 2
+/0/5f                    generic        Sky Lake-E Integrated Memory Controller
+/0/60                    generic        Sky Lake-E Integrated Memory Controller
+/0/61                    generic        Sky Lake-E Integrated Memory Controller
+/0/62                    generic        Sky Lake-E Integrated Memory Controller
+/0/63                    generic        Sky Lake-E Integrated Memory Controller
+/0/64                    generic        Sky Lake-E LM Channel 1
+/0/65                    generic        Sky Lake-E LMS Channel 1
+/0/66                    generic        Sky Lake-E LMDP Channel 1
+/0/67                    generic        Sky Lake-E DECS Channel 2
+/0/68                    generic        Sky Lake-E LM Channel 2
+/0/69                    generic        Sky Lake-E LMS Channel 2
+/0/6a                    generic        Sky Lake-E LMDP Channel 2
+/0/6b                    generic        Sky Lake-E VT-d
+/0/6c                    generic        Sky Lake-E RAS Configuration Registers
+/0/6d                    generic        Sky Lake-E IOxAPIC Configuration Registers
+/0/6e                    generic        Sky Lake-E KTI 0
+/0/6f                    generic        Sky Lake-E UPI Registers
+/0/70                    generic        Sky Lake-E KTI 0
+/0/71                    generic        Sky Lake-E UPI Registers
+/0/72                    generic        Sky Lake-E KTI 0
+/0/73                    generic        Sky Lake-E UPI Registers
+/0/74                    generic        Sky Lake-E M3KTI Registers
+/0/75                    generic        Sky Lake-E M3KTI Registers
+/0/76                    generic        Sky Lake-E M3KTI Registers
+/0/77                    generic        Sky Lake-E M3KTI Registers
+/0/78                    generic        Sky Lake-E M3KTI Registers
+/0/79                    generic        Sky Lake-E M2PCI Registers
+/0/7a                    generic        Sky Lake-E DDRIO Registers
+/0/7b                    generic        Sky Lake-E M2PCI Registers
+/0/7c                    generic        Sky Lake-E DDRIO Registers
+/0/7d                    generic        Sky Lake-E M2PCI Registers
+/0/7e                    generic        Sky Lake-E DDRIO Registers
+/0/7f                    generic        Sky Lake-E M2PCI Registers
+/0/80                    generic        Sky Lake-E DDRIO Registers
+/0/4                     generic        Sky Lake-E CBDMA Registers
+/0/4.1                   generic        Sky Lake-E CBDMA Registers
+/0/4.2                   generic        Sky Lake-E CBDMA Registers
+/0/4.3                   generic        Sky Lake-E CBDMA Registers
+/0/4.4                   generic        Sky Lake-E CBDMA Registers
+/0/4.5                   generic        Sky Lake-E CBDMA Registers
+/0/4.6                   generic        Sky Lake-E CBDMA Registers
+/0/4.7                   generic        Sky Lake-E CBDMA Registers
+/0/81                    generic        Sky Lake-E MM/Vt-d Configuration Registers
+/0/82                    generic        Sky Lake-E RAS
+/0/83                    generic        Sky Lake-E IOAPIC
+/0/84                    generic        Sky Lake-E Ubox Registers
+/0/85                    generic        Sky Lake-E Ubox Registers
+/0/86                    generic        Sky Lake-E Ubox Registers
+/0/87                    generic        Sky Lake-E VT-d
+/0/88                    generic        Sky Lake-E RAS Configuration Registers
+/0/89                    generic        Sky Lake-E IOxAPIC Configuration Registers
+/0/8a                    generic        Sky Lake-E CHA Registers
+/0/8.1                   generic        Sky Lake-E CHA Registers
+/0/8.2                   generic        Sky Lake-E CHA Registers
+/0/8b                    generic        Sky Lake-E CHA Registers
+/0/8c                    generic        Sky Lake-E CHA Registers
+/0/8d                    generic        Sky Lake-E CHA Registers
+/0/8e                    generic        Sky Lake-E CHA Registers
+/0/8f                    generic        Sky Lake-E CHA Registers
+/0/90                    generic        Sky Lake-E CHA Registers
+/0/91                    generic        Sky Lake-E CHA Registers
+/0/92                    generic        Sky Lake-E CHA Registers
+/0/93                    generic        Sky Lake-E CHA Registers
+/0/94                    generic        Sky Lake-E CHA Registers
+/0/95                    generic        Sky Lake-E CHA Registers
+/0/96                    generic        Sky Lake-E CHA Registers
+/0/97                    generic        Sky Lake-E CHA Registers
+/0/98                    generic        Sky Lake-E CHA Registers
+/0/99                    generic        Sky Lake-E CHA Registers
+/0/9a                    generic        Sky Lake-E CHA Registers
+/0/9b                    generic        Sky Lake-E CHA Registers
+/0/9c                    generic        Sky Lake-E CHA Registers
+/0/9d                    generic        Sky Lake-E CHA Registers
+/0/9e                    generic        Sky Lake-E CHA Registers
+/0/9f                    generic        Sky Lake-E CHA Registers
+/0/a0                    generic        Sky Lake-E CHA Registers
+/0/a1                    generic        Sky Lake-E CHA Registers
+/0/a2                    generic        Sky Lake-E CHA Registers
+/0/a3                    generic        Sky Lake-E CHA Registers
+/0/a4                    generic        Sky Lake-E CHA Registers
+/0/a5                    generic        Sky Lake-E CHA Registers
+/0/a6                    generic        Sky Lake-E CHA Registers
+/0/a7                    generic        Sky Lake-E CHA Registers
+/0/a8                    generic        Sky Lake-E CHA Registers
+/0/a9                    generic        Sky Lake-E CHA Registers
+/0/aa                    generic        Sky Lake-E CHA Registers
+/0/ab                    generic        Sky Lake-E CHA Registers
+/0/ac                    generic        Sky Lake-E CHA Registers
+/0/ad                    generic        Sky Lake-E CHA Registers
+/0/ae                    generic        Sky Lake-E CHA Registers
+/0/af                    generic        Sky Lake-E CHA Registers
+/0/b0                    generic        Sky Lake-E CHA Registers
+/0/b1                    generic        Sky Lake-E CHA Registers
+/0/b2                    generic        Sky Lake-E CHA Registers
+/0/b3                    generic        Sky Lake-E CHA Registers
+/0/b4                    generic        Sky Lake-E CHA Registers
+/0/b5                    generic        Sky Lake-E CHA Registers
+/0/b6                    generic        Sky Lake-E CHA Registers
+/0/b7                    generic        Sky Lake-E CHA Registers
+/0/b8                    generic        Sky Lake-E CHA Registers
+/0/b9                    generic        Sky Lake-E CHA Registers
+/0/ba                    generic        Sky Lake-E CHA Registers
+/0/bb                    generic        Sky Lake-E CHA Registers
+/0/bc                    generic        Sky Lake-E CHA Registers
+/0/bd                    generic        Sky Lake-E CHA Registers
+/0/be                    generic        Sky Lake-E CHA Registers
+/0/bf                    generic        Sky Lake-E CHA Registers
+/0/c0                    generic        Sky Lake-E CHA Registers
+/0/c1                    generic        Sky Lake-E CHA Registers
+/0/c2                    generic        Sky Lake-E CHA Registers
+/0/c3                    generic        Sky Lake-E CHA Registers
+/0/c4                    generic        Sky Lake-E PCU Registers
+/0/c5                    generic        Sky Lake-E PCU Registers
+/0/c6                    generic        Sky Lake-E PCU Registers
+/0/c7                    generic        Sky Lake-E PCU Registers
+/0/c8                    generic        Sky Lake-E PCU Registers
+/0/c9                    generic        Sky Lake-E PCU Registers
+/0/ca                    generic        Sky Lake-E PCU Registers
+/0/103                   bridge         Sky Lake-E PCI Express Root Port A
+/0/103/0                 storage        NVMe Datacenter SSD [3DNAND, Beta Rock Controller]
+/0/104                   bridge         Sky Lake-E PCI Express Root Port B
+/0/cb                    generic        Sky Lake-E VT-d
+/0/cc                    generic        Sky Lake-E RAS Configuration Registers
+/0/cd                    generic        Sky Lake-E IOxAPIC Configuration Registers
+/0/8                     generic        Sky Lake-E Integrated Memory Controller
+/0/ce                    generic        Sky Lake-E Integrated Memory Controller
+/0/cf                    generic        Sky Lake-E Integrated Memory Controller
+/0/d0                    generic        Sky Lake-E Integrated Memory Controller
+/0/d1                    generic        Sky Lake-E Integrated Memory Controller
+/0/d2                    generic        Sky Lake-E Integrated Memory Controller
+/0/d3                    generic        Sky Lake-E Integrated Memory Controller
+/0/d4                    generic        Sky Lake-E LM Channel 1
+/0/d5                    generic        Sky Lake-E LMS Channel 1
+/0/d6                    generic        Sky Lake-E LMDP Channel 1
+/0/d7                    generic        Sky Lake-E DECS Channel 2
+/0/d8                    generic        Sky Lake-E LM Channel 2
+/0/d9                    generic        Sky Lake-E LMS Channel 2
+/0/da                    generic        Sky Lake-E LMDP Channel 2
+/0/db                    generic        Sky Lake-E Integrated Memory Controller
+/0/dc                    generic        Sky Lake-E Integrated Memory Controller
+/0/dd                    generic        Sky Lake-E Integrated Memory Controller
+/0/de                    generic        Sky Lake-E Integrated Memory Controller
+/0/df                    generic        Sky Lake-E Integrated Memory Controller
+/0/e0                    generic        Sky Lake-E LM Channel 1
+/0/e1                    generic        Sky Lake-E LMS Channel 1
+/0/e2                    generic        Sky Lake-E LMDP Channel 1
+/0/e3                    generic        Sky Lake-E DECS Channel 2
+/0/e4                    generic        Sky Lake-E LM Channel 2
+/0/e5                    generic        Sky Lake-E LMS Channel 2
+/0/e6                    generic        Sky Lake-E LMDP Channel 2
+/0/0                     bridge         Sky Lake-E PCI Express Root Port A
+/0/105                   bridge         Sky Lake-E PCI Express Root Port B
+/0/106                   bridge         Sky Lake-E PCI Express Root Port C
+/0/3                     bridge         Sky Lake-E PCI Express Root Port D
+/0/5                     generic        Sky Lake-E VT-d
+/0/5.2                   generic        Sky Lake-E RAS Configuration Registers
+/0/5.4                   generic        Sky Lake-E IOxAPIC Configuration Registers
+/0/e7                    generic        Sky Lake-E KTI 0
+/0/e8                    generic        Sky Lake-E UPI Registers
+/0/e9                    generic        Sky Lake-E KTI 0
+/0/ea                    generic        Sky Lake-E UPI Registers
+/0/eb                    generic        Sky Lake-E KTI 0
+/0/ec                    generic        Sky Lake-E UPI Registers
+/0/ed                    generic        Sky Lake-E M3KTI Registers
+/0/ee                    generic        Sky Lake-E M3KTI Registers
+/0/ef                    generic        Sky Lake-E M3KTI Registers
+/0/f0                    generic        Sky Lake-E M3KTI Registers
+/0/f1                    generic        Sky Lake-E M3KTI Registers
+/0/f2                    generic        Sky Lake-E M2PCI Registers
+/0/f3                    generic        Sky Lake-E DDRIO Registers
+/0/f4                    generic        Sky Lake-E M2PCI Registers
+/0/f5                    generic        Sky Lake-E DDRIO Registers
+/0/f6                    generic        Sky Lake-E M2PCI Registers
+/0/f7                    generic        Sky Lake-E DDRIO Registers
+/0/f8                    generic        Sky Lake-E M2PCI Registers
+/0/f9                    generic        Sky Lake-E DDRIO Registers
+/0/fa                    system         PnP device PNP0b00
+/0/fb                    system         PnP device PNP0c02
+/0/fc                    system         PnP device PNP0c02
+/0/fd                    communication  PnP device PNP0501
+/0/fe                    system         PnP device PNP0c02
+/0/ff                    system         PnP device PNP0c02
+WARNING: output may be incomplete or inaccurate, you should run this program as super-user.
