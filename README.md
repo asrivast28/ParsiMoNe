@@ -56,7 +56,7 @@ For running in parallel, the following can be executed:
 </code></pre>  
 
 ## Algorithms
-Currently, the only supported algorithm for learning module networks is `lemontree` that corresponds to the algorithm by [Bonnet et al](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003983) originally implemented in [_Lemon-Tree_](https://github.com/erbon7/lemon-tree).
+Currently, the only supported algorithm for learning module networks is `lemontree` that corresponds to the algorithm by [Bonnet et al.](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003983) originally implemented in [_Lemon-Tree_](https://github.com/erbon7/lemon-tree).
 
 ## Publication
 _Currently under double-blind review._
