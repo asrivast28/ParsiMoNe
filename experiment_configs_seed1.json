@@ -1,0 +1,30 @@
+{
+  "ganesh" :
+  {
+    "seed" : 1,
+    "init_num_clust" : 0,
+    "num_runs" : 1,
+    "num_steps" : 2,
+    "output_file" : "test_ganesh.out"
+  },
+  "tight_clusters" :
+  {
+    "min_weight" : 0.25,
+    "min_clust_size" : 10,
+    "min_clust_score" : 2,
+    "output_file" : "test_consensus.out"
+  },
+  "regulators" :
+  {
+    "seed" : 1,
+    "num_runs" : 1,
+    "num_steps" : 2,
+    "burn_in" : 1,
+    "sample_steps" : 1,
+    "score_gain" : 0.0,
+    "reg_file" : "",
+    "beta_reg" : 20.0,
+    "num_reg" : 10,
+    "output_file" : "test_modules"
+  }
+}
