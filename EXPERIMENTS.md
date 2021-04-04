@@ -1,0 +1,97 @@
+# Experiments
+This file is intended to serve as a guide for anyone trying to reproduce the results reported in our paper.
+
+## Initial Setup
+
+### Cloning and Building
+Our code can be downloaded by cloning this Github repo, along with all the submodules, by executing the following:
+<pre><code>git clone --recurse-submodules git@github.com:asrivast28/ParsiMoNe.git
+</code></pre>
+Once all the [requirements](README.md#requirements) have been installed, the executable for measuring performance can be built by executing the following:
+<pre><code>scons TIMER=1
+</code></pre>
+More information on building can be found in [`README.md`](README.md#building)
+
+#### Lemon-Tree
+In order to compare the performance of our implementation with that of [_Lemon-Tree_](https://github.com/erbon7/lemon-tree), we modified it to use the same PRNG
+as our implementation and made some other optimizations in the implementation that we had implemented in our code.
+These changes were made for the two implementation to produce the same output for the same input data set and parameters.  
+This modified version is available in [a fork of _Lemon-Tree_](https://github.com/asrivast28/lemon-tree/tree/MatchOutput) which can be downloaded and built by executing the following:
+<pre><code>git clone git@github.com:asrivast28/lemon-tree.git
+cd lemon-tree/LemonTree
+git checkout -b MatchOutput origin/MatchOutput
+ant jar
+</code></pre>
+
+
+### Data sets
+We used the following two gene expression data sets from two model organisms for our experiments: _Saccharomyces cerevisiae_, or Baker's yeast, and the _Arabidopsis thaliana_ plant.
+* A data set created by [Tchourine et al.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5987223/) from multiple RNA-seq studies of _S. cerevisiae_.
+The data set contains 2,577 observations for 5,716 genes and it can be downloaded from [here](https://zenodo.org/record/3355524#.Xpx0t1NKhhE).
+* A manually curated data set created from multiple microarray studies of _A. thaliana_ focusing only on the studies of the development process in the plant. 
+The data set contains 5,102 observations for 18,373 genes and it will be made available soon.
+
+## Measuring Performance
+We provide a Python script, [`parsimone_experiments.py`](https://github.com/asrivast28/bn-utils/blob/main/scripts/parsimone_experiments.py), for easily
+experimenting with our software as well as _Lemon-Tree_ and measuring their performance. 
+The commands using the script below expect that the script is executed from the `ParsiMoNe` directory cloned above and the two data sets are available at the following paths in the directory: `data/yeast/yeast_microarray_expression.tsv` and `data/athaliana/athaliana_development_exp.tsv`
+
+### Run-time Environment
+The details of the run-time environment that we used for our experiments (collected using the file [`collect_environment.sh`](https://github.com/SC-Tech-Program/Author-Kit/blob/master/collect_environment.sh))
+are available in [`phoenix_environment.log`](phoenix_environment.log).
+
+### Sequential Performance
+We compared the sequential performance of our code with that of [_Lemon-Tree_](https://github.com/erbon7/lemon-tree) for learning module networks
+using the algorithm by [Bonnet et al.](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003983)  
+We obtained the run-times of our implementation for 15 different subsamples of the yeast data set using three different random seeds by executing the following:
+<pre><code>for seed in {0,1,2}; do
+  common/scripts/parsimone_experiments.py -r 1 -p 1 -d yeast -n 1000 2000 3000 -m 125 250 500 750 1000 -g "\-g experiment_configs_seed${seed}.json" --results ours_yeast_sequential_seed${seed}.csv -b . -s . --output-suffix _seed${seed}
+done
+</code></pre>
+This will generate three CSV files with the run-times of different components in our implementation: `ours_yeast_sequential_seed0.csv`, `ours_yeast_sequential_seed1.csv`, and `ours_yeast_sequential_seed2.csv`.
+
+We have also provided a Python script, [`parsimone_lemontree.py`](https://github.com/asrivast28/bn-utils/blob/main/scripts/parsimone_lemontree.py), for running the _Lemon-Tree_ executable with the same arguments as our executable.
+Using this script, the sequential performance of _Lemon-Tree_ for the 15 subsampled data sets can be measured similar to that of our implementation by executing the following:
+<pre><code>for seed in {0,1,2}; do
+  common/scripts/parsimone_experiments.py -r 1 -p 1 -d yeast -n 1000 2000 3000 -m 125 250 500 750 1000 -g "\-g experiment_configs_seed${seed}.json" --results lemontree_yeast_sequential_seed${seed}.csv -b . -s . --output-suffix _seed${seed} --lemontree
+done
+</code></pre>
+Again, this will generate three CSV files with the run-times of different _Lemon-Tree_ components: `lemontree_yeast_sequential_seed0.csv`, `lemontree_yeast_sequential_seed1.csv`, and `lemontree_yeast_sequential_seed2.csv`.
+
+Then, the outputs generated by _Lemon-Tree_ and our implementation in the above runs for different subsampled data sets and different PRNG seeds can be compared, using [`compare_lemontree.py`](https://github.com/asrivast28/bn-utils/blob/main/scripts/compare_lemontree.py), by executing the following:
+<pre><code>for n in {1000,2000,3000}; do
+  for m in {125,250,500,750,1000}; do
+    for seed in {0,1,2}; do
+      common/scripts/compare_lemontree.py yeast_n${n}_m${m}_lemontree_seed${seed} yeast_n${n}_m${m}_seed${seed}
+    done
+  done
+done
+</code></pre>
+
+### Parallel Performance
+
+#### Smaller Data sets
+First, we measured the strong scaling parallel performance of our code for learning the network for all the variables in the yeast data set using a subset of observations in the data set.
+The following can be executed for the purpose:
+<pre><code>for seed in {0,1,2}; do
+  common/scripts/parsimone_experiments.py -r 1 --ppn 24 -p 1 2 4 8 16 32 64 128 256 512 1024 -d yeast -n 5716 -m 125 250 500 750 1000 -g "\-g experiment_configs_seed${seed}.json" --results parallel_yeast_small_seed${seed}.csv -b . -s . --output-suffix _seed${seed}
+done
+</code></pre>
+Similar to the sequential performance, this will generate seed-specific CSV files (`parallel_yeast_small_seed0.csv`, etc.) with run-times of our implementation when using different number of cores.
+
+This command automatically compares the output generated when using different number of processors with the first output generated for every combination of `n` and `m`.
+Therefore, in this case, it compares against the output generated by `p=1` and errors out in case of any mismatches.
+
+### Big Data sets
+Then, we measured the parallel run-times for learning module networks from the two complete data sets.  
+For the yeast data set, we conducted strong scaling exxperiments by executing the following:
+<pre><code>for seed in {0,1,2}; do
+  common/scripts/parsimone_experiments.py -r 1 --ppn 24 -p 4 8 16 32 64 128 256 512 1024 2048 4096 -d yeast -g "\-g experiment_configs_seed${seed}.json" --results parallel_yeast_complete_seed${seed}.csv -b . -s . --output-suffix _seed${seed}
+done
+</code></pre>
+
+Since learning network from the _A. thaliana_ development data set requires a lot of time, we experimented with the data set only on larger number of cores as follows:
+<pre><code>for seed in {0,1,2}; do
+  common/scripts/parsimone_experiments.py -r 1 --ppn 24 -p 1024 2048 4096 -d development -g "\-g experiment_configs_seed${seed}.json" --results parallel_development_complete_seed${seed}.csv -b . -s . --output-suffix _seed${seed}
+done
+</code></pre>
