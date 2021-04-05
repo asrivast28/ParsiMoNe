@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-unittest:
+    name:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Checkout submodules
+      run: |
+        git config --global url."https://github.com/".insteadOf "git@github.com:"
+        git submodule sync --recursive
+        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+        git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+
+    - name: Install dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo add-apt-repository -n -y ppa:ubuntu-toolchain-r/test
+        sudo add-apt-repository -n -y ppa:mhier/libboost-latest
+        sudo apt-get update
+        sudo apt-get install -y gcc-10 g++-10 libopenmpi-dev scons libboost1.74-dev libarmadillo-dev
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 60 --slave /usr/bin/g++ g++ /usr/bin/g++-10
+        mpic++ --version
+
+    - name: Build
+      run: |
+        scons
