@@ -33,6 +33,18 @@ jobs:
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 60 --slave /usr/bin/g++ g++ /usr/bin/g++-10
         mpic++ --version
 
+    - name: Install trng4
+      if: runner.os == 'Linux'
+      run: |
+        cd ~
+        wget https://www.numbercrunch.de/trng/trng-4.22.tar.gz
+        tar -xzf trng-4.22.tar.gz
+        cd trng4-4.22
+        mkdir build && cd build
+        cmake ..
+        make
+        sudo make install
+
     - name: Build
       run: |
         scons
