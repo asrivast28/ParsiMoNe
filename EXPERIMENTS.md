@@ -27,9 +27,9 @@ ant jar
 ### Data sets
 We used the following two gene expression data sets from two model organisms for our experiments: _Saccharomyces cerevisiae_, or Baker's yeast, and the _Arabidopsis thaliana_ plant.
 * A data set created by [Tchourine et al.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5987223/) from multiple RNA-seq studies of _S. cerevisiae_.
-The data set contains 2,577 observations for 5,716 genes and it can be downloaded from [here](https://zenodo.org/record/3355524#.Xpx0t1NKhhE).
+The data set contains 2,577 observations for 5,716 genes and it can be downloaded from [Zenodo](https://zenodo.org/record/3355524#.Xpx0t1NKhhE).
 * A manually curated data set created from multiple microarray studies of _A. thaliana_ focusing only on the studies of the development process in the plant. 
-The data set contains 5,102 observations for 18,373 genes and it will be made available soon.
+The data set contains 5,102 observations for 18,373 genes and it can also be downloaded from [Zeonodo](https://zenodo.org/record/4672797#.YG9TQhNKhQI).
 
 ## Measuring Performance
 We provide a Python script, [`parsimone_experiments.py`](https://github.com/asrivast28/bn-utils/blob/main/scripts/parsimone_experiments.py), for easily
