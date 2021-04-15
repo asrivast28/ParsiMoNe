@@ -40,8 +40,8 @@ public:
   std::vector<uint32_t>
   nodeWeights() const;
 
-  uint32_t
-  maxSplits(const Set&) const;
+  uint64_t
+  splitWeight(const Set&) const;
 
   void
   candidateParentsSplits(std::vector<std::tuple<uint32_t, Var, Var, double>>&, const Set&, const OptimalBeta&, const uint32_t, const uint64_t, const uint64_t) const;
@@ -205,18 +205,18 @@ Module<Data, Var, Set>::nodeWeights(
 }
 
 template <typename Data, typename Var, typename Set>
-uint32_t
-Module<Data, Var, Set>::maxSplits(
+uint64_t
+Module<Data, Var, Set>::splitWeight(
   const Set& candidateParents
 ) const
 {
-  auto maxSplits = 0u;
+  uint64_t splitWeight = 0u;
   for (auto& tree : m_trees) {
     for (auto* node : tree->nodes()) {
-      maxSplits += node->maxSplits(candidateParents);
+      splitWeight += node->splitWeight(candidateParents);
     }
   }
-  return maxSplits;
+  return splitWeight;
 }
 
 template <typename Data, typename Var, typename Set>
@@ -226,34 +226,33 @@ Module<Data, Var, Set>::candidateParentsSplits(
   const Set& candidateParents,
   const OptimalBeta& ob,
   const uint32_t firstNode,
-  const uint64_t firstSplit,
-  const uint64_t maxSplits
+  const uint64_t firstWeight,
+  const uint64_t maxWeight
 ) const
 {
   std::list<std::tuple<uint32_t, Var, Var, double>> learnedSplits;
   auto nodeIndex = firstNode;
-  auto prevSplits = 0u;
+  uint64_t prevWeight = 0u;
   for (auto& tree : m_trees) {
     for (auto* node : tree->nodes()) {
-      auto nodeMaxSplits = node->maxSplits(candidateParents);
-      if ((prevSplits + nodeMaxSplits) >= firstSplit) {
-        LOG_MESSAGE(debug, "Node %u: Learning candidate splits", nodeIndex);
-        auto nodeFirstSplit = (firstSplit >= prevSplits) ? (firstSplit - prevSplits) : 0u;
-        auto nodeNumSplits = std::min(nodeMaxSplits, firstSplit + maxSplits - prevSplits) - nodeFirstSplit;
-        auto nodeSplits = node->candidateParentsSplits(candidateParents, ob, nodeFirstSplit, nodeNumSplits);
+      auto nodeWeight = node->splitWeight(candidateParents);
+      if ((prevWeight + nodeWeight) >= firstWeight) {
+        uint64_t nodeFirstWeight = (firstWeight >= prevWeight) ? (firstWeight - prevWeight) : 0u;
+        uint64_t nodeMaxWeight = std::min(nodeWeight, firstWeight + maxWeight - prevWeight) - nodeFirstWeight;
+        auto nodeSplits = node->candidateParentsSplits(candidateParents, ob, nodeFirstWeight, nodeMaxWeight);
         auto addNodeIndex = [&nodeIndex] (const std::tuple<Var, Var, double>& split)
                                          { return std::tuple_cat(std::tie(nodeIndex), split); };
         auto prevCandidatesSize = candidateSplits.size();
         candidateSplits.resize(prevCandidatesSize + nodeSplits.size());
         auto candidateIt = std::next(candidateSplits.begin(), prevCandidatesSize);
         std::transform(nodeSplits.begin(), nodeSplits.end(), candidateIt, addNodeIndex);
-        prevSplits += (nodeFirstSplit + nodeNumSplits);
-        if (prevSplits == (firstSplit + maxSplits)) {
+        prevWeight += (nodeFirstWeight + nodeMaxWeight);
+        if (prevWeight >= (firstWeight + maxWeight)) {
           return;
         }
       }
       else {
-        prevSplits += nodeMaxSplits;
+        prevWeight += nodeWeight;
       }
       ++nodeIndex;
     }

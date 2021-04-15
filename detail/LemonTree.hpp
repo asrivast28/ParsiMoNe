@@ -435,38 +435,52 @@ LemonTree<Data, Var, Set>::learnModulesParents_splits(
   TIMER_DECLARE(tCandidates);
   OptimalBeta ob(0.0, betaMax, 1e-5);
   std::vector<uint32_t> moduleNodeCount(modules.size());
-  std::vector<uint64_t> moduleMaxSplits(modules.size());
+  std::vector<uint64_t> moduleSplitWeight(modules.size());
   auto moduleCit = modules.cbegin();
   for (auto m = 0u; m < modules.size(); ++m, ++moduleCit) {
     moduleNodeCount[m] = moduleCit->nodeCount();
-    moduleMaxSplits[m] = moduleCit->maxSplits(candidateParents);
+    moduleSplitWeight[m] = moduleCit->splitWeight(candidateParents);
   }
   std::vector<uint64_t> moduleNodeCountPrefix(moduleNodeCount.size());
   std::partial_sum(moduleNodeCount.cbegin(), moduleNodeCount.cend(), moduleNodeCountPrefix.begin());
-  std::vector<uint64_t> moduleMaxSplitsPrefix(moduleMaxSplits.size());
-  std::partial_sum(moduleMaxSplits.cbegin(), moduleMaxSplits.cend(), moduleMaxSplitsPrefix.begin());
-  auto totalSplits = moduleMaxSplitsPrefix.back();
-  mxx::blk_dist block(totalSplits, this->m_comm.size(), this->m_comm.rank());
-  auto myFirstModule = std::distance(moduleMaxSplitsPrefix.cbegin(),
-                                     std::lower_bound(moduleMaxSplitsPrefix.cbegin(),
-                                                      moduleMaxSplitsPrefix.cend(),
-                                                      block.eprefix_size() + 1));
-  auto myLastModule = std::distance(moduleMaxSplitsPrefix.cbegin(),
-                                    std::lower_bound(moduleMaxSplitsPrefix.cbegin(),
-                                                     moduleMaxSplitsPrefix.cend(),
+  std::vector<uint64_t> moduleSplitWeightPrefix(moduleSplitWeight.size());
+  std::partial_sum(moduleSplitWeight.cbegin(), moduleSplitWeight.cend(), moduleSplitWeightPrefix.begin());
+  auto totalWeight = moduleSplitWeightPrefix.back();
+  mxx::blk_dist block(totalWeight, this->m_comm.size(), this->m_comm.rank());
+  auto myFirstModule = std::distance(moduleSplitWeightPrefix.cbegin(),
+                                     std::upper_bound(moduleSplitWeightPrefix.cbegin(),
+                                                      moduleSplitWeightPrefix.cend(),
+                                                      block.eprefix_size()));
+  auto myLastModule = std::distance(moduleSplitWeightPrefix.cbegin(),
+                                    std::lower_bound(moduleSplitWeightPrefix.cbegin(),
+                                                     moduleSplitWeightPrefix.cend(),
                                                      block.iprefix_size()));
   std::vector<std::tuple<uint32_t, Var, Var, double>> mySplits;
   auto moduleIt = std::next(modules.begin(), myFirstModule);
-  auto prevSplits = block.eprefix_size();
+  auto prevWeight = block.eprefix_size();
+  TIMER_DECLARE(tSplits);
   for (auto m = myFirstModule; m <= myLastModule; ++m, ++moduleIt) {
-    LOG_MESSAGE(info, "Module %u: Learning candidate parents splits", m);
     auto firstNode = moduleNodeCountPrefix[m] - moduleNodeCount[m];
-    auto firstSplit = prevSplits - (moduleMaxSplitsPrefix[m] - moduleMaxSplits[m]);
-    auto maxSplits = std::min(block.iprefix_size(), moduleMaxSplitsPrefix[m]) - prevSplits;
-    if (maxSplits > 0) {
-      moduleIt->candidateParentsSplits(mySplits, candidateParents, ob, firstNode, firstSplit, maxSplits);
-      prevSplits += maxSplits;
+    auto firstWeight = prevWeight - (moduleSplitWeightPrefix[m] - moduleSplitWeight[m]);
+    auto maxWeight = std::min(block.iprefix_size(), moduleSplitWeightPrefix[m]) - prevWeight;
+    if (maxWeight > 0) {
+      moduleIt->candidateParentsSplits(mySplits, candidateParents, ob, firstNode, firstWeight, maxWeight);
+      prevWeight += maxWeight;
     }
+  }
+  auto allSplitsTime = mxx::gather(static_cast<double>(tSplits.elapsed()), 0, this->m_comm);
+  this->m_comm.barrier();
+  if (this->m_comm.is_first()) {
+    TIMER_ELAPSED("Time taken in the split computations: ", tSplits);
+    auto totalTime = 0.0;
+    auto maxTime = 0.0;
+    for (const auto st : allSplitsTime) {
+      totalTime += st;
+      maxTime = std::max(maxTime, st);
+    }
+    auto avgTime = totalTime / allSplitsTime.size();
+    auto imbalance = (maxTime - avgTime) / avgTime;
+    std::cout << "Imbalance in the split computations: " << imbalance << std::endl;
   }
   // Redistribute to get the same number of candidate splits on every processor
   mxx::stable_distribute_inplace(mySplits, this->m_comm);

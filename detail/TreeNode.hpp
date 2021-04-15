@@ -170,7 +170,7 @@ public:
   prune(const double);
 
   uint64_t
-  maxSplits(const Set&) const;
+  splitWeight(const Set&) const;
 
   std::list<std::tuple<Var, Var, double>>
   candidateParentsSplits(const Set&, const OptimalBeta&, const uint64_t, const uint64_t) const;
@@ -406,11 +406,13 @@ TreeNode<Data, Var, Set>::logPartSum(
 
 template <typename Data, typename Var, typename Set>
 uint64_t
-TreeNode<Data, Var, Set>::maxSplits(
+TreeNode<Data, Var, Set>::splitWeight(
   const Set& candidateParents
 ) const
 {
-  return candidateParents.size() * m_observations.size();
+  uint64_t splitCount = candidateParents.size() * m_observations.size();
+  uint64_t splitWeight = splitCount * m_observations.size();
+  return splitWeight;
 }
 
 template <typename Data, typename Var, typename Set>
@@ -450,19 +452,23 @@ std::list<std::tuple<Var, Var, double>>
 TreeNode<Data, Var, Set>::candidateParentsSplits(
   const Set& candidateParents,
   const OptimalBeta& ob,
-  const uint64_t firstSplit,
-  const uint64_t maxSplits
+  const uint64_t firstWeight,
+  const uint64_t maxWeight
 ) const
 {
   std::list<std::tuple<Var, Var, double>> splits;
+  auto unitWeight = m_observations.size();
+  uint64_t firstSplit = (firstWeight / unitWeight) + ((firstWeight % unitWeight) ? 1 : 0);
+  auto lastWeight = firstWeight + maxWeight;
+  uint64_t lastSplit = (lastWeight / unitWeight) + ((lastWeight % unitWeight) ? 1 : 0) - 1;
   auto firstParent = firstSplit / m_observations.size();
-  auto lastParent = (firstSplit + maxSplits - 1) / m_observations.size();
+  auto lastParent = lastSplit / m_observations.size();
   auto pIt = std::next(candidateParents.begin(), firstParent);
   auto prevSplits = firstSplit;
   for (auto p = firstParent; p <= lastParent; ++p, ++pIt) {
     Assignment<Data, Var, Set> assmt(m_data, *pIt, this);
     auto firstObservation = prevSplits % m_observations.size();
-    auto numObservations = std::min(m_observations.size() - firstObservation, firstSplit + maxSplits - prevSplits);
+    auto numObservations = std::min(m_observations.size() - firstObservation, lastSplit + 1 - prevSplits);
     auto oIt = std::next(m_observations.begin(), firstObservation);
     for (auto o = firstObservation; o < firstObservation + numObservations; ++o, ++oIt) {
       auto sv = m_data(*pIt, *oIt);
