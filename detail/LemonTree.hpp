@@ -741,7 +741,8 @@ template <typename Data, typename Var, typename Set>
 void
 LemonTree<Data, Var, Set>::writeModules(
   const std::string& modulesFile,
-  const std::list<Module<Data, Var, Set>>& modules
+  const std::list<Module<Data, Var, Set>>& modules,
+  const double topParents
 ) const
 {
   std::string allParentsFile = modulesFile + ".allreg.txt";
@@ -774,7 +775,7 @@ LemonTree<Data, Var, Set>::writeModules(
       allScores.insert(parent.second);
     }
   }
-  auto index = static_cast<uint32_t>(round(0.01 * allScores.size()));
+  auto index = static_cast<uint32_t>(round(topParents * allScores.size()));
   auto cutoff = *std::next(allScores.begin(), index);
   // Now, write the modules
   auto m = 0u;
@@ -908,10 +909,11 @@ LemonTree<Data, Var, Set>::learnNetwork_parallel(
   this->m_comm.barrier();
   TIMER_PAUSE(m_tModules);
   auto modulesFile = modulesConfigs.get<std::string>("output_file");
+  auto topParents = 0.01;
   if (!modulesFile.empty() && this->m_comm.is_first()) {
     TIMER_START(m_tWrite);
     modulesFile = outputDir + "/" + modulesFile;
-    this->writeModules(modulesFile, modules);
+    this->writeModules(modulesFile, modules, topParents);
     TIMER_PAUSE(m_tWrite);
   }
 }

@@ -106,7 +106,7 @@ private:
   writeParents(std::ofstream&, const std::unordered_map<Var, double>&, const uint32_t, const double = std::numeric_limits<double>::lowest()) const;
 
   void
-  writeModules(const std::string&, const std::list<Module<Data, Var, Set>>&) const;
+  writeModules(const std::string&, const std::list<Module<Data, Var, Set>>&, const double) const;
 
 private:
   TIMER_DECLARE(m_tWrite, mutable);
