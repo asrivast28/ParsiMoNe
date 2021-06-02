@@ -844,7 +844,7 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
   if (!modulesFile.empty()) {
     TIMER_START(m_tWrite);
     modulesFile = outputDir + "/" + modulesFile;
-    this->writeModules(modulesFile, modules);
+    this->writeModules(modulesFile, modules, topParents);
     TIMER_PAUSE(m_tWrite);
   }
 }
