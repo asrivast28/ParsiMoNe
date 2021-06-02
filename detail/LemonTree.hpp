@@ -840,6 +840,7 @@ LemonTree<Data, Var, Set>::learnNetwork_sequential(
   auto modules = this->learnModules<PRNG>(std::move(coClusters), modulesConfigs);
   TIMER_PAUSE(m_tModules);
   auto modulesFile = modulesConfigs.get<std::string>("output_file");
+  auto topParents = 0.01;
   if (!modulesFile.empty()) {
     TIMER_START(m_tWrite);
     modulesFile = outputDir + "/" + modulesFile;
