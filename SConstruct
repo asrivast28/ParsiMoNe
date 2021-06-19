@@ -20,7 +20,7 @@ import os
 import platform
 
 topDir = os.path.abspath(os.getcwd())
-cpp = None
+cpp = '' if ARGUMENTS.get('CCACHE', 0) in [0, '0'] else 'ccache '
 buildDir = None
 targetSuffix = ''
 
@@ -64,7 +64,7 @@ if os.path.exists(mxxDir):
 
 
 if platform.system() in ['Darwin', 'Linux']:
-  cpp = 'mpic++'
+  cpp += 'mpic++'
   cppFlags.extend([
               '-Wall',
               '-Wextra',
