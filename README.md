@@ -60,7 +60,9 @@ For running in parallel, the following can be executed:
 Currently, the only supported algorithm for learning module networks is `lemontree` that corresponds to the algorithm by [Bonnet et al.](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003983) originally implemented in [_Lemon-Tree_](https://github.com/erbon7/lemon-tree).
 
 ## Publication
-_Currently under double-blind review._  
+**Ankit Srivastava, Sriram Chockalingam, Maneesha Aluru, and Srinivas Aluru.** "Parallel Construction of Module Networks."
+_Accepted to appear in Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis._ 2021.
+
 The experiments in the publication can be reproduced using [`EXPERIMENTS.md`](EXPERIMENTS.md).
 
 ## Licensing
