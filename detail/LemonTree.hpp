@@ -468,6 +468,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_splits(
       prevWeight += maxWeight;
     }
   }
+#if TIMER
   auto allSplitsTime = mxx::gather(static_cast<double>(tSplits.elapsed()), 0, this->m_comm);
   this->m_comm.barrier();
   if (this->m_comm.is_first()) {
@@ -482,6 +483,7 @@ LemonTree<Data, Var, Set>::learnModulesParents_splits(
     auto imbalance = (maxTime - avgTime) / avgTime;
     std::cout << "Imbalance in the split computations: " << imbalance << std::endl;
   }
+#endif
   // Redistribute to get the same number of candidate splits on every processor
   mxx::stable_distribute_inplace(mySplits, this->m_comm);
   this->m_comm.barrier();
