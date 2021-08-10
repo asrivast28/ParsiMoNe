@@ -63,6 +63,11 @@ git checkout -b MatchOutput origin/MatchOutput
 ant jar
 </code></pre>
 
+The modified _Lemon-Tree_ uses the random number generators from the TRNG library, made available in _Java_ using [_Java Native Interface_](https://docs.oracle.com/javase/8/docs/technotes/guides/jni/). The corresponding library needs to be built separately by executing the following:
+<pre><code>cd lemon-tree/LemonTree/src/lemontree/utils
+make
+</code></pre>
+
 ### Data sets
 We used the following two gene expression data sets from two model organisms for our experiments: _Saccharomyces cerevisiae_, or Baker's yeast, and the _Arabidopsis thaliana_ plant.
 * A data set created by [Tchourine et al.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5987223/) from multiple RNA-seq studies of _S. cerevisiae_.
